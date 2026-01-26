@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import MapRenderer from './MapRenderer';
 import {
@@ -13,6 +13,7 @@ import {
   SOUTH_AMERICA_COUNTRIES,
   OCEANIA_COUNTRIES,
 } from '../data/regions';
+import { getQuizBestTime, saveQuizTime } from '../hooks/useProgress';
 
 const REGION_DATA = {
   'europe': EUROPE_COUNTRIES,
@@ -71,10 +72,14 @@ export default function QuizMode({ regionId, onBack }) {
   const [answeredItems, setAnsweredItems] = useState({});
   const [feedback, setFeedback] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [hoveredCode, setHoveredCode] = useState(null);
   const [showHint, setShowHint] = useState(false);
+  const [isNewRecord, setIsNewRecord] = useState(false);
+  const elapsedTimerRef = useRef(null);
 
   const currentQuestion = questions[currentIndex];
+  const bestTime = getQuizBestTime(regionId, difficulty);
 
   const getEntityList = useCallback(() => {
     const data = REGION_DATA[regionId];
@@ -91,6 +96,7 @@ export default function QuizMode({ regionId, onBack }) {
     return allCodes;
   }, [regionId, includeMicrostates]);
 
+  // Countdown timer for timed modes
   useEffect(() => {
     if (gameState !== 'playing' || !DIFFICULTY_LEVELS[difficulty].time) return;
     if (timeLeft === 0) {
@@ -103,6 +109,24 @@ export default function QuizMode({ regionId, onBack }) {
     return () => clearInterval(timer);
   }, [gameState, timeLeft, difficulty]);
 
+  // Elapsed timer (counts up)
+  useEffect(() => {
+    if (gameState === 'playing') {
+      elapsedTimerRef.current = setInterval(() => {
+        setElapsedTime((prev) => prev + 1);
+      }, 1000);
+    } else {
+      if (elapsedTimerRef.current) {
+        clearInterval(elapsedTimerRef.current);
+      }
+    }
+    return () => {
+      if (elapsedTimerRef.current) {
+        clearInterval(elapsedTimerRef.current);
+      }
+    };
+  }, [gameState]);
+
   const startGame = useCallback(() => {
     const entityList = getEntityList();
     const shuffled = shuffleArray(entityList);
@@ -114,6 +138,8 @@ export default function QuizMode({ regionId, onBack }) {
     setFeedback(null);
     setShowHint(false);
     setTimeLeft(DIFFICULTY_LEVELS[difficulty].time);
+    setElapsedTime(0);
+    setIsNewRecord(false);
     setGameState('playing');
   }, [difficulty, getEntityList]);
 
@@ -121,7 +147,8 @@ export default function QuizMode({ regionId, onBack }) {
     if (gameState !== 'playing' || !currentQuestion || answeredItems[code]) return;
 
     if (code === currentQuestion.code) {
-      setScore((prev) => prev + 1);
+      const newScore = score + 1;
+      setScore(newScore);
       setAnsweredItems((prev) => ({ ...prev, [code]: 'correct' }));
       setFeedback({ type: 'correct', message: `Correct! That's ${currentQuestion.name}!` });
 
@@ -129,6 +156,10 @@ export default function QuizMode({ regionId, onBack }) {
         setFeedback(null);
         setShowHint(false);
         if (currentIndex + 1 >= questions.length) {
+          // Game finished - check for new record
+          const finalTime = elapsedTime + 1; // +1 because state hasn't updated yet
+          const wasNewRecord = saveQuizTime(regionId, difficulty, finalTime, newScore, questions.length);
+          setIsNewRecord(wasNewRecord);
           setGameState('finished');
         } else {
           setCurrentIndex((prev) => prev + 1);
@@ -147,7 +178,7 @@ export default function QuizMode({ regionId, onBack }) {
         });
       }, 600);
     }
-  }, [gameState, currentQuestion, currentIndex, questions.length, answeredItems]);
+  }, [gameState, currentQuestion, currentIndex, questions.length, answeredItems, score, elapsedTime, regionId, difficulty]);
 
   const getFeatureColor = useCallback((code) => {
     if (answeredItems[code] === 'correct') return '#22c55e';
@@ -172,7 +203,7 @@ export default function QuizMode({ regionId, onBack }) {
   // Menu screen
   if (gameState === 'menu') {
     return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
+      <div className="min-h-screen w-screen overflow-hidden flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
         <NavBar />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="w-full max-w-md">
@@ -189,35 +220,45 @@ export default function QuizMode({ regionId, onBack }) {
 
             {/* Difficulty options */}
             <div className="space-y-3 mb-6">
-              {Object.entries(DIFFICULTY_LEVELS).map(([level, config]) => (
-                <button
-                  key={level}
-                  onClick={() => setDifficulty(level)}
-                  className="w-full p-4 rounded-xl transition-all text-left group"
-                  style={{
-                    background: difficulty === level
-                      ? 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%)'
-                      : '#252525',
-                    border: difficulty === level ? '2px solid rgba(255,255,255,0.3)' : '2px solid #333',
-                  }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-semibold" style={{ color: '#fff' }}>{config.label}</div>
-                      <div className="text-sm" style={{ color: difficulty === level ? 'rgba(255,255,255,0.7)' : '#666' }}>
-                        {config.desc}
+              {Object.entries(DIFFICULTY_LEVELS).map(([level, config]) => {
+                const levelBestTime = getQuizBestTime(regionId, level);
+                return (
+                  <button
+                    key={level}
+                    onClick={() => setDifficulty(level)}
+                    className="w-full p-4 rounded-xl transition-all text-left group"
+                    style={{
+                      background: difficulty === level
+                        ? 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%)'
+                        : '#252525',
+                      border: difficulty === level ? '2px solid rgba(255,255,255,0.3)' : '2px solid #333',
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold" style={{ color: '#fff' }}>{config.label}</span>
+                          {levelBestTime && (
+                            <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#22c55e', color: '#000' }}>
+                              🏆 {formatTime(levelBestTime.time)}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm" style={{ color: difficulty === level ? 'rgba(255,255,255,0.7)' : '#666' }}>
+                          {config.desc}
+                        </div>
                       </div>
+                      {difficulty === level && (
+                        <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center">
+                          <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
-                    {difficulty === level && (
-                      <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center">
-                        <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
 
             {regionId === 'europe' && (
@@ -255,20 +296,44 @@ export default function QuizMode({ regionId, onBack }) {
 
   // Finished screen
   if (gameState === 'finished') {
+    const isPerfect = score === questions.length;
+
     return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
+      <div className="min-h-screen w-screen overflow-hidden flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
         <NavBar />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="w-full max-w-md text-center">
             <div className="text-6xl mb-4">
-              {score === questions.length ? '🏆' : score >= questions.length * 0.8 ? '🎉' : score >= questions.length * 0.5 ? '👍' : '📚'}
+              {isPerfect ? '🏆' : score >= questions.length * 0.8 ? '🎉' : score >= questions.length * 0.5 ? '👍' : '📚'}
             </div>
             <h2 className="text-3xl font-bold mb-2" style={{ color: '#fff' }}>
-              {score === questions.length ? 'Perfect Score!' : 'Quiz Complete!'}
+              {isPerfect ? 'Perfect Score!' : 'Quiz Complete!'}
             </h2>
-            <p className="text-lg mb-6" style={{ color: '#888' }}>
+            <p className="text-lg mb-2" style={{ color: '#888' }}>
               {region.name}
             </p>
+
+            {/* Time display */}
+            <div className="mb-6">
+              <div className="text-4xl font-bold" style={{ color: '#fff' }}>
+                {formatTime(elapsedTime)}
+              </div>
+              {isNewRecord && (
+                <div className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: 'rgba(34, 197, 94, 0.2)', border: '1px solid rgba(34, 197, 94, 0.5)' }}>
+                  <span style={{ color: '#22c55e' }}>🎉 New Record!</span>
+                </div>
+              )}
+              {bestTime && !isNewRecord && isPerfect && (
+                <div className="text-sm mt-1" style={{ color: '#666' }}>
+                  Best: {formatTime(bestTime.time)}
+                </div>
+              )}
+              {!isPerfect && (
+                <div className="text-sm mt-1" style={{ color: '#888' }}>
+                  Get a perfect score to save your time!
+                </div>
+              )}
+            </div>
 
             <div className="grid grid-cols-3 gap-3 mb-8">
               <div className="rounded-xl p-4" style={{ backgroundColor: '#252525', border: '1px solid #333' }}>
@@ -309,7 +374,7 @@ export default function QuizMode({ regionId, onBack }) {
 
   // Playing screen - full height map focus
   return (
-    <div className="h-screen flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
+    <div className="h-screen w-screen overflow-hidden flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
       {/* Nav bar */}
       <header
         className="shrink-0"
@@ -326,11 +391,19 @@ export default function QuizMode({ regionId, onBack }) {
 
           {/* Stats */}
           <div className="flex items-center gap-4 text-sm">
+            {/* Elapsed Timer - prominent */}
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg" style={{ backgroundColor: '#252525' }}>
+              <svg className="w-4 h-4" style={{ color: '#888' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="font-mono font-semibold" style={{ color: '#fff' }}>{formatTime(elapsedTime)}</span>
+            </div>
+
             <span style={{ color: '#fff' }} className="font-semibold">{score}/{questions.length}</span>
             <span style={{ color: '#666' }}>{accuracy}%</span>
             {timeLeft !== null && (
               <span style={{ color: timeLeft < 15 ? '#ef4444' : '#666' }} className={timeLeft < 15 ? 'animate-pulse font-medium' : ''}>
-                {formatTime(timeLeft)}
+                ⏱ {formatTime(timeLeft)}
               </span>
             )}
             <button
@@ -386,7 +459,7 @@ export default function QuizMode({ regionId, onBack }) {
       )}
 
       {/* Map fills remaining space */}
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 overflow-hidden">
         <MapRenderer
           regionId={regionId}
           onFeatureClick={handleFeatureClick}
