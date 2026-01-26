@@ -112,12 +112,6 @@ function HomePage() {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="mt-6 pt-4" style={{ borderTop: '1px solid #333' }}>
-          <p className="text-xs" style={{ color: '#555' }}>
-            Built with React & D3.js · Data from REST Countries API
-          </p>
-        </footer>
       </div>
     </div>
   );
@@ -149,15 +143,21 @@ function ContinentCard({ continent }) {
         <div className={`flex gap-2 mb-2 transition-all duration-200 ${showOptions ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
           <Link
             to={`/quiz/${continent.id}`}
-            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors backdrop-blur-sm"
+            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium text-white transition-colors backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(30, 58, 138, 0.7)' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(30, 58, 138, 0.9)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(30, 58, 138, 0.7)'}
           >
-            Quiz
+            Quiz Mode
           </Link>
           <Link
             to={`/learn/${continent.id}`}
-            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors backdrop-blur-sm"
+            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium text-white transition-colors backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(124, 58, 237, 0.7)' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(124, 58, 237, 0.9)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(124, 58, 237, 0.7)'}
           >
-            Learn
+            Learn Mode
           </Link>
         </div>
 
