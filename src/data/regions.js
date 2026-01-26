@@ -259,6 +259,60 @@ export const US_REGIONS = {
 // Micro-states (optional in quiz)
 export const EUROPE_MICROSTATES = ['020', '438', '470', '492', '674', '336'];
 
+// Helpful hints for US states
+const US_STATE_HINTS = {
+  '01': 'Deep South, borders Florida and Georgia',
+  '02': 'Huge state in the far northwest, not connected to lower 48',
+  '04': 'Southwest corner, borders Mexico and California',
+  '05': 'South-central, borders Mississippi River on east',
+  '06': 'Long state on the Pacific coast',
+  '08': 'Rocky Mountain state, rectangular shape',
+  '09': 'Tiny state in New England, south of Massachusetts',
+  '10': 'Second smallest state, on the Atlantic between Maryland and New Jersey',
+  '12': 'Peninsula in the Southeast, surrounded by water on 3 sides',
+  '13': 'Southeast, borders Florida to the south',
+  '15': 'Island chain in the Pacific Ocean',
+  '16': 'Northwest, shaped like a logger\'s boot',
+  '17': 'Midwest, Chicago is here',
+  '18': 'Midwest, directly east of Illinois',
+  '19': 'Midwest, between Illinois and Nebraska',
+  '20': 'Great Plains, rectangular, south of Nebraska',
+  '21': 'South-central, famous for bourbon and horse racing',
+  '22': 'Gulf Coast, boot-shaped, New Orleans is here',
+  '23': 'Northeastern tip of the US, lots of coastline',
+  '24': 'Mid-Atlantic, small state north of Washington DC',
+  '25': 'New England, Boston is here',
+  '26': 'Great Lakes state shaped like a mitten',
+  '27': 'Upper Midwest, borders Canada, Land of 10,000 Lakes',
+  '28': 'Deep South, borders Louisiana and Alabama',
+  '29': 'Midwest, borders 8 states, St. Louis and Kansas City',
+  '30': 'Big Sky country, northern border with Canada',
+  '31': 'Great Plains, directly south of South Dakota',
+  '32': 'Desert state, Las Vegas is here',
+  '33': 'Small New England state, south of Maine',
+  '34': 'Mid-Atlantic, directly across from New York City',
+  '35': 'Southwest, between Arizona and Texas',
+  '36': 'Mid-Atlantic, Empire State, NYC is here',
+  '37': 'Southeast Atlantic coast, south of Virginia',
+  '38': 'Northern Plains, borders Canada, very rectangular',
+  '39': 'Midwest, borders Lake Erie, Cleveland and Cincinnati',
+  '40': 'Southern Plains, panhandle points west',
+  '41': 'Pacific Northwest, borders California and Washington',
+  '42': 'Mid-Atlantic, Philadelphia and Pittsburgh',
+  '44': 'Smallest state, New England, south of Massachusetts',
+  '45': 'Southeast, first state to secede, borders Georgia',
+  '46': 'Northern Plains, Mount Rushmore is here',
+  '47': 'South-central, Nashville and Memphis, long horizontal shape',
+  '48': 'Huge southern state, borders Mexico',
+  '49': 'Rocky Mountains, Salt Lake City, rectangular',
+  '50': 'New England, tiny state between New Hampshire and New York',
+  '51': 'Mid-Atlantic, Washington DC borders it',
+  '53': 'Pacific Northwest, Seattle is here, borders Canada',
+  '54': 'Appalachian state, unusual shape, "almost heaven"',
+  '55': 'Upper Midwest, borders Lake Michigan and Lake Superior',
+  '56': 'Rocky Mountain state, rectangular, Yellowstone is here',
+};
+
 export function getRegionHint(regionId, code) {
   if (regionId === 'europe') {
     for (const [region, countries] of Object.entries(EUROPE_REGIONS)) {
@@ -269,12 +323,7 @@ export function getRegionHint(regionId, code) {
     return 'Europe';
   }
   if (regionId === 'us-states') {
-    for (const [region, states] of Object.entries(US_REGIONS)) {
-      if (states.includes(code)) {
-        return region.charAt(0).toUpperCase() + region.slice(1);
-      }
-    }
-    return 'USA';
+    return US_STATE_HINTS[code] || 'USA';
   }
   return '';
 }
