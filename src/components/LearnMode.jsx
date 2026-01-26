@@ -76,27 +76,25 @@ export default function LearnMode({ regionId, onBack }) {
             Geo Explorer
           </Link>
 
-          <div className="flex items-center gap-4">
-            {/* Progress indicator */}
-            <div className="flex items-center gap-2">
-              <div className="w-24 h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#333' }}>
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{
-                    width: `${progress.percentage}%`,
-                    backgroundColor: progress.percentage === 100 ? '#22c55e' : '#60a5fa'
-                  }}
-                />
-              </div>
-              <span className="text-xs font-medium" style={{ color: '#888' }}>
-                {progress.learned}/{progress.total}
-              </span>
+          {/* Progress - centered */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium" style={{ color: '#fff' }}>{region.name}</span>
+            <div className="w-32 h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#333' }}>
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${progress.percentage}%`,
+                  backgroundColor: progress.percentage === 100 ? '#22c55e' : '#60a5fa'
+                }}
+              />
             </div>
-
-            <span className="text-sm font-medium" style={{ color: '#fff' }}>
-              {region.name}
+            <span className="text-sm font-medium" style={{ color: '#888' }}>
+              {progress.learned}/{progress.total}
             </span>
           </div>
+
+          {/* Placeholder for balance */}
+          <div style={{ width: '100px' }}></div>
         </div>
       </header>
 
