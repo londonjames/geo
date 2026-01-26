@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+/* Prevent horizontal scrolling caused by 100vw elements */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
