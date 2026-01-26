@@ -328,28 +328,28 @@ function FactModal({ data, onClose }) {
     .slice(0, 2);
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-3" onClick={onClose}>
       <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" />
       <div
-        className="relative rounded-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto"
+        className="relative rounded-2xl w-full max-w-lg"
         style={{ backgroundColor: '#1a1a1a' }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div
-          className="sticky top-0 z-10 px-5 py-3 flex items-center justify-between"
-          style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #2a2a2a' }}
+          className="px-4 py-2.5 flex items-center justify-between"
+          style={{ borderBottom: '1px solid #2a2a2a' }}
         >
           <div className="flex items-center gap-2">
-            <span className="text-2xl">{config.emoji}</span>
+            <span className="text-xl">{config.emoji}</span>
             <div>
-              <h3 className="text-lg font-bold" style={{ color: '#fff' }}>{config.title}</h3>
+              <h3 className="text-base font-bold" style={{ color: '#fff' }}>{config.title}</h3>
               <p className="text-xs" style={{ color: '#666' }}>{name}</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-full hover:bg-white/10 transition-colors"
             style={{ color: '#666' }}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -358,13 +358,13 @@ function FactModal({ data, onClose }) {
           </button>
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="p-3 space-y-3">
           {/* Main Facts */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {facts.map((fact, i) => (
               <div
                 key={i}
-                className="flex items-start gap-2 p-3 rounded-xl"
+                className="flex items-start gap-2 py-2 px-2.5 rounded-lg"
                 style={{ backgroundColor: config.bg, border: `1px solid ${config.border}` }}
               >
                 <span
@@ -380,39 +380,16 @@ function FactModal({ data, onClose }) {
 
           {/* Deep Dive Section */}
           <div
-            className="p-3 rounded-xl"
+            className="p-2.5 rounded-lg"
             style={{ backgroundColor: '#252525', border: '1px solid #333' }}
           >
-            <h4 className="text-sm font-semibold mb-1 flex items-center gap-2" style={{ color: '#fff' }}>
-              <span>💡</span> {deepDive.title}
-            </h4>
-            <p className="text-sm leading-snug mb-2" style={{ color: '#aaa' }}>
-              {deepDive.content}
+            <p className="text-sm leading-snug mb-1.5" style={{ color: '#aaa' }}>
+              <span className="font-semibold" style={{ color: '#fff' }}>💡 {deepDive.title}:</span> {deepDive.content}
             </p>
-            <div
-              className="p-2 rounded-lg text-xs"
-              style={{ backgroundColor: '#1a1a1a', color: '#888' }}
-            >
+            <p className="text-xs" style={{ color: '#777' }}>
               <strong>Think about it:</strong> {deepDive.tip}
-            </div>
+            </p>
           </div>
-
-          {/* Related Facts */}
-          {relatedFacts.length > 0 && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs" style={{ color: '#666' }}>Also:</span>
-              {relatedFacts.map(([key, cfg]) => (
-                <div
-                  key={key}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg"
-                  style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
-                >
-                  <span className="text-sm">{cfg.emoji}</span>
-                  <span className="text-xs font-medium" style={{ color: cfg.color }}>{cfg.title}</span>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>
