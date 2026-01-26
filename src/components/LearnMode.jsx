@@ -61,7 +61,7 @@ export default function LearnMode({ regionId, onBack }) {
   const entityLabel = region.entities === 'states' ? 'states' : 'countries';
 
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
+    <div className="h-screen w-screen overflow-x-hidden flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
       {/* Nav Header */}
       <header
         className="shrink-0"

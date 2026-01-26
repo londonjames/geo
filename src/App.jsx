@@ -47,12 +47,12 @@ function NavBar() {
 
 function HomePage() {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#1c1c1c' }}>
+    <div className="min-h-screen w-screen overflow-x-hidden" style={{ backgroundColor: '#1c1c1c' }}>
       <NavBar />
 
       <div className="max-w-6xl mx-auto px-5 md:px-10 py-5">
         {/* Hero - Single line */}
-        <p className="text-lg mb-5" style={{ color: '#888' }}>
+        <p className="text-lg mb-5" style={{ color: '#e0e0e0' }}>
           Think you know your way around the world? Prove it.
         </p>
 

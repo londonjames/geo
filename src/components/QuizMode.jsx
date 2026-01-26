@@ -203,7 +203,7 @@ export default function QuizMode({ regionId, onBack }) {
   // Menu screen
   if (gameState === 'menu') {
     return (
-      <div className="min-h-screen w-screen overflow-hidden flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
+      <div className="min-h-screen w-screen overflow-x-hidden flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
         <NavBar />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="w-full max-w-md">
@@ -299,7 +299,7 @@ export default function QuizMode({ regionId, onBack }) {
     const isPerfect = score === questions.length;
 
     return (
-      <div className="min-h-screen w-screen overflow-hidden flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
+      <div className="min-h-screen w-screen overflow-x-hidden flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
         <NavBar />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="w-full max-w-md text-center">
@@ -374,7 +374,7 @@ export default function QuizMode({ regionId, onBack }) {
 
   // Playing screen - full height map focus
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
+    <div className="h-screen w-screen overflow-x-hidden flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
       {/* Nav bar */}
       <header
         className="shrink-0"
@@ -417,38 +417,36 @@ export default function QuizMode({ regionId, onBack }) {
         </div>
       </header>
 
-      {/* PROMINENT: Current country to find */}
+      {/* PROMINENT: Current country to find - single line */}
       <div
-        className="shrink-0 py-4 text-center"
+        className="shrink-0 px-5 py-3 flex items-center justify-center gap-3"
         style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #333' }}
       >
-        <p className="text-xs uppercase tracking-wider mb-1" style={{ color: '#e0e0e0', letterSpacing: '0.12em' }}>Find this {entityLabel}</p>
-        <h1 className="text-3xl md:text-4xl font-bold" style={{ color: '#fff' }}>
+        <span className="text-sm" style={{ color: '#888' }}>Find</span>
+        <h1 className="text-2xl md:text-3xl font-bold" style={{ color: '#fff' }}>
           {currentQuestion?.name}
         </h1>
         {DIFFICULTY_LEVELS[difficulty].hints && (
-          <div className="mt-2">
-            {showHint ? (
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm" style={{ backgroundColor: '#333', color: '#fff' }}>
-                📍 Look in {getRegionHint(regionId, currentQuestion?.code)}
-              </span>
-            ) : (
-              <button
-                onClick={() => setShowHint(true)}
-                className="px-4 py-2 rounded-full text-sm transition-colors hover:bg-opacity-80"
-                style={{ backgroundColor: '#333', color: '#888' }}
-              >
-                Need a hint?
-              </button>
-            )}
-          </div>
+          showHint ? (
+            <span className="text-sm px-3 py-1 rounded-full" style={{ backgroundColor: '#333', color: '#fff' }}>
+              📍 {getRegionHint(regionId, currentQuestion?.code)}
+            </span>
+          ) : (
+            <button
+              onClick={() => setShowHint(true)}
+              className="text-sm px-3 py-1 rounded-full transition-colors hover:bg-opacity-80"
+              style={{ backgroundColor: '#333', color: '#666' }}
+            >
+              Hint?
+            </button>
+          )
         )}
       </div>
 
       {/* Feedback toast */}
       {feedback && (
         <div
-          className="absolute top-32 left-1/2 -translate-x-1/2 z-20 px-6 py-3 rounded-xl font-semibold shadow-lg"
+          className="absolute top-24 left-1/2 -translate-x-1/2 z-20 px-6 py-3 rounded-xl font-semibold shadow-lg"
           style={{
             backgroundColor: feedback.type === 'correct' ? '#22c55e' : '#ef4444',
             color: '#fff',
