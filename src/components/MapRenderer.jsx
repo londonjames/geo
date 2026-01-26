@@ -12,6 +12,7 @@ export default function MapRenderer({
   interactive = true,
   darkMode = false,
   fullHeight = false,
+  initialZoom = 1,
 }) {
   const { mapData, loading, error } = useMapData(regionId);
   const region = REGIONS[regionId];
@@ -40,14 +41,20 @@ export default function MapRenderer({
     zoomRef.current = zoom;
     svg.call(zoom);
 
-    // Reset zoom when region changes
-    svg.call(zoom.transform, d3.zoomIdentity);
-    setTransform(d3.zoomIdentity);
+    // Apply initial zoom or reset when region changes
+    if (initialZoom > 1) {
+      const initialTransform = d3.zoomIdentity.scale(initialZoom);
+      svg.call(zoom.transform, initialTransform);
+      setTransform(initialTransform);
+    } else {
+      svg.call(zoom.transform, d3.zoomIdentity);
+      setTransform(d3.zoomIdentity);
+    }
 
     return () => {
       svg.on('.zoom', null);
     };
-  }, [regionId, interactive, mapData]);
+  }, [regionId, interactive, mapData, initialZoom]);
 
   const handleZoomIn = useCallback(() => {
     if (!svgRef.current || !zoomRef.current) return;

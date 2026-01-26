@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import MapRenderer from './MapRenderer';
 import {
   REGIONS,
@@ -36,6 +37,25 @@ function shuffleArray(array) {
     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
   return newArray;
+}
+
+function NavBar() {
+  return (
+    <header
+      className="shrink-0"
+      style={{ backgroundColor: '#1c1c1c', borderBottom: '1px solid #333' }}
+    >
+      <div className="max-w-6xl mx-auto px-5 md:px-10 py-4">
+        <Link
+          to="/"
+          className="text-sm font-medium tracking-widest uppercase hover:opacity-60 transition-opacity"
+          style={{ color: '#e0e0e0', letterSpacing: '0.12em' }}
+        >
+          Geo Explorer
+        </Link>
+      </div>
+    </header>
+  );
 }
 
 export default function QuizMode({ regionId, onBack }) {
@@ -152,56 +172,82 @@ export default function QuizMode({ regionId, onBack }) {
   // Menu screen
   if (gameState === 'menu') {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#0d0d0d' }}>
-        <div className="rounded-xl p-6 w-full max-w-sm" style={{ backgroundColor: '#1a1a1a', border: '1px solid #333' }}>
-          <h2 className="text-xl font-bold mb-4 text-center" style={{ color: '#fff' }}>
-            {region.emoji} {region.name} Quiz
-          </h2>
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
+        <NavBar />
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <span className="text-4xl mb-2 block">{region.emoji}</span>
+              <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>
+                {region.name} Quiz
+              </h2>
+              <p className="text-sm mt-1" style={{ color: '#666' }}>
+                Find each {entityLabel} on the map
+              </p>
+            </div>
 
-          <div className="space-y-2 mb-4">
-            {Object.entries(DIFFICULTY_LEVELS).map(([level, config]) => (
-              <button
-                key={level}
-                onClick={() => setDifficulty(level)}
-                className="w-full p-3 rounded-lg transition-all text-left"
-                style={{
-                  backgroundColor: difficulty === level ? '#333' : '#252525',
-                  border: difficulty === level ? '2px solid #fff' : '2px solid transparent',
-                }}
-              >
-                <div className="font-medium text-sm" style={{ color: '#fff' }}>{config.label}</div>
-                <div className="text-xs" style={{ color: '#888' }}>{config.desc}</div>
-              </button>
-            ))}
+            {/* Difficulty options */}
+            <div className="space-y-3 mb-6">
+              {Object.entries(DIFFICULTY_LEVELS).map(([level, config]) => (
+                <button
+                  key={level}
+                  onClick={() => setDifficulty(level)}
+                  className="w-full p-4 rounded-xl transition-all text-left group"
+                  style={{
+                    background: difficulty === level
+                      ? 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%)'
+                      : '#252525',
+                    border: difficulty === level ? '2px solid rgba(255,255,255,0.3)' : '2px solid #333',
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold" style={{ color: '#fff' }}>{config.label}</div>
+                      <div className="text-sm" style={{ color: difficulty === level ? 'rgba(255,255,255,0.7)' : '#666' }}>
+                        {config.desc}
+                      </div>
+                    </div>
+                    {difficulty === level && (
+                      <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center">
+                        <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {regionId === 'europe' && (
+              <label className="flex items-center gap-3 p-3 rounded-xl mb-6 cursor-pointer" style={{ backgroundColor: '#252525', border: '1px solid #333' }}>
+                <input
+                  type="checkbox"
+                  checked={includeMicrostates}
+                  onChange={(e) => setIncludeMicrostates(e.target.checked)}
+                  className="w-5 h-5 rounded"
+                />
+                <span style={{ color: '#ccc' }}>Include microstates (Vatican, Monaco, etc.)</span>
+              </label>
+            )}
+
+            <button
+              onClick={startGame}
+              className="w-full py-4 font-semibold rounded-xl transition-all hover:brightness-110 text-lg"
+              style={{ backgroundColor: '#fff', color: '#000' }}
+            >
+              Start Quiz ({getEntityList().length} {entityLabelPlural})
+            </button>
+
+            <button
+              onClick={onBack}
+              className="w-full mt-4 py-3 text-sm transition-colors hover:text-white"
+              style={{ color: '#666' }}
+            >
+              ← Back to Home
+            </button>
           </div>
-
-          {regionId === 'europe' && (
-            <label className="flex items-center gap-2 p-2 rounded-lg mb-4 cursor-pointer text-sm" style={{ backgroundColor: '#252525' }}>
-              <input
-                type="checkbox"
-                checked={includeMicrostates}
-                onChange={(e) => setIncludeMicrostates(e.target.checked)}
-                className="w-4 h-4 rounded"
-              />
-              <span style={{ color: '#ccc' }}>Include microstates</span>
-            </label>
-          )}
-
-          <button
-            onClick={startGame}
-            className="w-full py-3 font-semibold rounded-lg transition-all hover:brightness-110"
-            style={{ backgroundColor: '#fff', color: '#000' }}
-          >
-            Start Quiz ({getEntityList().length} {entityLabelPlural})
-          </button>
-
-          <button
-            onClick={onBack}
-            className="w-full mt-3 py-2 text-sm transition-colors"
-            style={{ color: '#666' }}
-          >
-            ← Back
-          </button>
         </div>
       </div>
     );
@@ -210,45 +256,51 @@ export default function QuizMode({ regionId, onBack }) {
   // Finished screen
   if (gameState === 'finished') {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#0d0d0d' }}>
-        <div className="rounded-xl p-6 w-full max-w-sm text-center" style={{ backgroundColor: '#1a1a1a', border: '1px solid #333' }}>
-          <div className="text-5xl mb-3">
-            {score === questions.length ? '🏆' : score >= questions.length * 0.8 ? '🎉' : score >= questions.length * 0.5 ? '👍' : '📚'}
-          </div>
-          <h2 className="text-2xl font-bold mb-4" style={{ color: '#fff' }}>
-            {score === questions.length ? 'Perfect!' : 'Quiz Complete!'}
-          </h2>
+      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
+        <NavBar />
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="w-full max-w-md text-center">
+            <div className="text-6xl mb-4">
+              {score === questions.length ? '🏆' : score >= questions.length * 0.8 ? '🎉' : score >= questions.length * 0.5 ? '👍' : '📚'}
+            </div>
+            <h2 className="text-3xl font-bold mb-2" style={{ color: '#fff' }}>
+              {score === questions.length ? 'Perfect Score!' : 'Quiz Complete!'}
+            </h2>
+            <p className="text-lg mb-6" style={{ color: '#888' }}>
+              {region.name}
+            </p>
 
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            <div className="rounded-lg p-2" style={{ backgroundColor: '#252525' }}>
-              <div className="text-xl font-bold" style={{ color: '#fff' }}>{score}/{questions.length}</div>
-              <div className="text-xs" style={{ color: '#666' }}>Correct</div>
+            <div className="grid grid-cols-3 gap-3 mb-8">
+              <div className="rounded-xl p-4" style={{ backgroundColor: '#252525', border: '1px solid #333' }}>
+                <div className="text-2xl font-bold" style={{ color: '#fff' }}>{score}/{questions.length}</div>
+                <div className="text-xs mt-1" style={{ color: '#666' }}>Correct</div>
+              </div>
+              <div className="rounded-xl p-4" style={{ backgroundColor: '#252525', border: '1px solid #333' }}>
+                <div className="text-2xl font-bold" style={{ color: '#22c55e' }}>{accuracy}%</div>
+                <div className="text-xs mt-1" style={{ color: '#666' }}>Accuracy</div>
+              </div>
+              <div className="rounded-xl p-4" style={{ backgroundColor: '#252525', border: '1px solid #333' }}>
+                <div className="text-2xl font-bold" style={{ color: '#ef4444' }}>{incorrectGuesses}</div>
+                <div className="text-xs mt-1" style={{ color: '#666' }}>Mistakes</div>
+              </div>
             </div>
-            <div className="rounded-lg p-2" style={{ backgroundColor: '#252525' }}>
-              <div className="text-xl font-bold" style={{ color: '#22c55e' }}>{accuracy}%</div>
-              <div className="text-xs" style={{ color: '#666' }}>Accuracy</div>
-            </div>
-            <div className="rounded-lg p-2" style={{ backgroundColor: '#252525' }}>
-              <div className="text-xl font-bold" style={{ color: '#ef4444' }}>{incorrectGuesses}</div>
-              <div className="text-xs" style={{ color: '#666' }}>Mistakes</div>
-            </div>
-          </div>
 
-          <div className="flex gap-2 justify-center flex-wrap">
-            <button
-              onClick={startGame}
-              className="px-4 py-2 font-medium rounded-lg"
-              style={{ backgroundColor: '#fff', color: '#000' }}
-            >
-              Play Again
-            </button>
-            <button
-              onClick={onBack}
-              className="px-4 py-2 font-medium rounded-lg"
-              style={{ backgroundColor: '#333', color: '#fff' }}
-            >
-              Back
-            </button>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={startGame}
+                className="px-6 py-3 font-semibold rounded-xl transition-all hover:brightness-110"
+                style={{ backgroundColor: '#fff', color: '#000' }}
+              >
+                Play Again
+              </button>
+              <button
+                onClick={onBack}
+                className="px-6 py-3 font-semibold rounded-xl transition-colors"
+                style={{ backgroundColor: '#333', color: '#fff', border: '1px solid #444' }}
+              >
+                Back to Home
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -258,19 +310,22 @@ export default function QuizMode({ regionId, onBack }) {
   // Playing screen - full height map focus
   return (
     <div className="h-screen flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
-      {/* Compact top bar */}
-      <div className="shrink-0 px-3 py-2 flex items-center justify-between" style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #333' }}>
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setGameState('menu')}
-            className="p-1.5 rounded-lg hover:bg-white/10"
-            style={{ color: '#888' }}
+      {/* Nav bar */}
+      <header
+        className="shrink-0"
+        style={{ backgroundColor: '#1c1c1c', borderBottom: '1px solid #333' }}
+      >
+        <div className="px-5 py-3 flex items-center justify-between">
+          <Link
+            to="/"
+            className="text-sm font-medium tracking-widest uppercase hover:opacity-60 transition-opacity"
+            style={{ color: '#e0e0e0', letterSpacing: '0.12em' }}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <div className="flex items-center gap-3 text-sm">
+            Geo Explorer
+          </Link>
+
+          {/* Stats */}
+          <div className="flex items-center gap-4 text-sm">
             <span style={{ color: '#fff' }} className="font-semibold">{score}/{questions.length}</span>
             <span style={{ color: '#666' }}>{accuracy}%</span>
             {timeLeft !== null && (
@@ -278,37 +333,51 @@ export default function QuizMode({ regionId, onBack }) {
                 {formatTime(timeLeft)}
               </span>
             )}
-          </div>
-        </div>
-
-        {/* Current question - prominent */}
-        <div className="flex items-center gap-2">
-          <span className="text-xl font-bold" style={{ color: '#fff' }}>{currentQuestion?.name}</span>
-          {DIFFICULTY_LEVELS[difficulty].hints && !showHint && (
             <button
-              onClick={() => setShowHint(true)}
-              className="text-xs px-2 py-1 rounded"
+              onClick={() => setGameState('menu')}
+              className="px-3 py-1 rounded-lg text-xs"
               style={{ backgroundColor: '#333', color: '#888' }}
             >
-              Hint
+              Exit
             </button>
-          )}
+          </div>
         </div>
+      </header>
 
-        {/* Hint display */}
-        {showHint && (
-          <span className="text-xs" style={{ color: '#888' }}>
-            📍 {getRegionHint(regionId, currentQuestion?.code)}
-          </span>
+      {/* PROMINENT: Current country to find */}
+      <div
+        className="shrink-0 py-4 text-center"
+        style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #333' }}
+      >
+        <p className="text-xs uppercase tracking-wider mb-1" style={{ color: '#666' }}>Find this {entityLabel}:</p>
+        <h1 className="text-3xl md:text-4xl font-bold" style={{ color: '#fff' }}>
+          {currentQuestion?.name}
+        </h1>
+        {DIFFICULTY_LEVELS[difficulty].hints && (
+          <div className="mt-2">
+            {showHint ? (
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm" style={{ backgroundColor: '#333', color: '#fff' }}>
+                📍 Look in {getRegionHint(regionId, currentQuestion?.code)}
+              </span>
+            ) : (
+              <button
+                onClick={() => setShowHint(true)}
+                className="px-4 py-2 rounded-full text-sm transition-colors hover:bg-opacity-80"
+                style={{ backgroundColor: '#333', color: '#888' }}
+              >
+                Need a hint?
+              </button>
+            )}
+          </div>
         )}
       </div>
 
       {/* Feedback toast */}
       {feedback && (
         <div
-          className="absolute top-14 left-1/2 -translate-x-1/2 z-20 px-4 py-2 rounded-lg font-medium text-sm"
+          className="absolute top-32 left-1/2 -translate-x-1/2 z-20 px-6 py-3 rounded-xl font-semibold shadow-lg"
           style={{
-            backgroundColor: feedback.type === 'correct' ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)',
+            backgroundColor: feedback.type === 'correct' ? '#22c55e' : '#ef4444',
             color: '#fff',
           }}
         >
@@ -326,11 +395,12 @@ export default function QuizMode({ regionId, onBack }) {
           hoveredCode={hoveredCode}
           darkMode={true}
           fullHeight={true}
+          initialZoom={regionId === 'oceania' ? 1.5 : regionId === 'europe' ? 1.2 : 1}
         />
       </div>
 
       {/* Progress bar at bottom */}
-      <div className="shrink-0 h-1" style={{ backgroundColor: '#1a1a1a' }}>
+      <div className="shrink-0 h-1.5" style={{ backgroundColor: '#1a1a1a' }}>
         <div
           className="h-full transition-all duration-300"
           style={{ width: `${(score / questions.length) * 100}%`, backgroundColor: '#22c55e' }}

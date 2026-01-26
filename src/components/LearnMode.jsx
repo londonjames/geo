@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import MapRenderer from './MapRenderer';
 import InfoPanel from './InfoPanel';
 import { REGIONS } from '../data/regions';
@@ -26,32 +27,37 @@ export default function LearnMode({ regionId, onBack }) {
     return '#4a5568';
   }, [selectedCode, hoveredCode]);
 
+  // Initial zoom levels for different regions
+  const initialZoom = regionId === 'oceania' ? 1.5 : regionId === 'europe' ? 1.2 : 1;
+
   return (
     <div className="h-screen flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
-      {/* Compact Header */}
-      <div className="shrink-0 px-4 py-2 flex items-center justify-between" style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #333' }}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onBack}
-            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-            style={{ color: '#888' }}
+      {/* Nav Header */}
+      <header
+        className="shrink-0"
+        style={{ backgroundColor: '#1c1c1c', borderBottom: '1px solid #333' }}
+      >
+        <div className="px-5 py-3 flex items-center justify-between">
+          <Link
+            to="/"
+            className="text-sm font-medium tracking-widest uppercase hover:opacity-60 transition-opacity"
+            style={{ color: '#e0e0e0', letterSpacing: '0.12em' }}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <div>
-            <h1 className="text-lg font-semibold" style={{ color: '#fff' }}>
+            Geo Explorer
+          </Link>
+
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-medium" style={{ color: '#fff' }}>
               {region.emoji} {region.name}
-            </h1>
+            </span>
+            {hoveredCode && (
+              <span className="text-sm" style={{ color: '#888' }}>
+                {region.getName(hoveredCode)}
+              </span>
+            )}
           </div>
         </div>
-        {hoveredCode && (
-          <span className="text-sm" style={{ color: '#888' }}>
-            {region.getName(hoveredCode)}
-          </span>
-        )}
-      </div>
+      </header>
 
       {/* Main Content - Map fills remaining space */}
       <div className="flex-1 flex min-h-0">
@@ -65,6 +71,7 @@ export default function LearnMode({ regionId, onBack }) {
             hoveredCode={hoveredCode}
             darkMode={true}
             fullHeight={true}
+            initialZoom={initialZoom}
           />
         </div>
 
