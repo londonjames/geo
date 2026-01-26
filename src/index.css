@@ -1,7 +1,19 @@
 @import "tailwindcss";
 
-/* Prevent horizontal scrolling caused by 100vw elements */
-html, body {
-  overflow-x: hidden;
+/* Prevent ALL horizontal scrolling */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
   max-width: 100%;
+  width: 100%;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+body {
+  position: relative;
 }
