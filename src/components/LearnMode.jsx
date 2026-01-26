@@ -48,7 +48,7 @@ export default function LearnMode({ regionId, onBack }) {
 
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium" style={{ color: '#fff' }}>
-              {region.emoji} {region.name}
+              {region.name}
             </span>
             {hoveredCode && (
               <span className="text-sm" style={{ color: '#888' }}>

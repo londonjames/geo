@@ -126,7 +126,7 @@ export default function MapRenderer({
       {/* Zoom Controls */}
       {interactive && (
         <div
-          className="absolute top-3 right-3 z-10 flex flex-col gap-1"
+          className="absolute top-4 right-5 z-10 flex flex-col gap-1"
           style={{ touchAction: 'none' }}
         >
           <button
