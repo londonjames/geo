@@ -349,7 +349,7 @@ export default function QuizMode({ regionId, onBack }) {
         className="shrink-0 py-4 text-center"
         style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #333' }}
       >
-        <p className="text-xs uppercase tracking-wider mb-1" style={{ color: '#666' }}>Find this {entityLabel}:</p>
+        <p className="text-xs uppercase tracking-wider mb-1" style={{ color: '#e0e0e0', letterSpacing: '0.12em' }}>Find this {entityLabel}</p>
         <h1 className="text-3xl md:text-4xl font-bold" style={{ color: '#fff' }}>
           {currentQuestion?.name}
         </h1>
