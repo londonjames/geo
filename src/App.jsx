@@ -59,20 +59,20 @@ function HomePage() {
     <div className="min-h-screen" style={{ backgroundColor: '#1c1c1c' }}>
       <NavBar />
 
-      <div className="max-w-6xl mx-auto px-5 md:px-10 py-12">
+      <div className="max-w-6xl mx-auto px-5 md:px-10 py-6">
         {/* Hero */}
-        <div className="mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3" style={{ color: '#ffffff' }}>
+        <div className="mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2" style={{ color: '#ffffff' }}>
             Master World Geography
           </h1>
-          <p className="text-lg" style={{ color: '#888' }}>
+          <p className="text-base" style={{ color: '#888' }}>
             Interactive maps to learn countries, states, and capitals
           </p>
         </div>
 
         {/* US States - Featured */}
-        <section className="mb-16">
-          <h2 className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: '#666', letterSpacing: '0.12em' }}>
+        <section className="mb-8">
+          <h2 className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: '#666', letterSpacing: '0.12em' }}>
             United States
           </h2>
 
@@ -83,10 +83,10 @@ function HomePage() {
               style={{ backgroundColor: '#252525' }}
             >
               <div className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%)' }} />
-              <div className="relative p-6 flex items-center justify-between">
+              <div className="relative p-5 flex items-center justify-between">
                 <div>
-                  <div className="text-2xl mb-1">🇺🇸</div>
-                  <h3 className="text-xl font-semibold text-white">Quiz Mode</h3>
+                  <div className="text-3xl mb-1">🇺🇸</div>
+                  <h3 className="text-lg font-semibold text-white">Quiz Mode</h3>
                   <p className="text-sm text-white/70">Test your knowledge of all 50 states</p>
                 </div>
                 <svg className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,10 +101,10 @@ function HomePage() {
               style={{ backgroundColor: '#252525' }}
             >
               <div className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)' }} />
-              <div className="relative p-6 flex items-center justify-between">
+              <div className="relative p-5 flex items-center justify-between">
                 <div>
-                  <div className="text-2xl mb-1">🗺️</div>
-                  <h3 className="text-xl font-semibold text-white">Learn Mode</h3>
+                  <div className="text-3xl mb-1">🗺️</div>
+                  <h3 className="text-lg font-semibold text-white">Learn Mode</h3>
                   <p className="text-sm text-white/70">Explore facts about each state</p>
                 </div>
                 <svg className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,7 +117,7 @@ function HomePage() {
 
         {/* Continents */}
         <section>
-          <h2 className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: '#666', letterSpacing: '0.12em' }}>
+          <h2 className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: '#666', letterSpacing: '0.12em' }}>
             World Continents
           </h2>
 
@@ -129,7 +129,7 @@ function HomePage() {
         </section>
 
         {/* Footer */}
-        <footer className="mt-20 pt-8" style={{ borderTop: '1px solid #333' }}>
+        <footer className="mt-10 pt-6" style={{ borderTop: '1px solid #333' }}>
           <p className="text-xs" style={{ color: '#555' }}>
             Built with React & D3.js · Data from REST Countries API
           </p>
@@ -145,7 +145,7 @@ function ContinentCard({ continent }) {
   return (
     <div
       className="relative rounded-xl overflow-hidden cursor-pointer group"
-      style={{ backgroundColor: '#252525', minHeight: '180px' }}
+      style={{ backgroundColor: '#252525', minHeight: '160px' }}
       onMouseEnter={() => setShowOptions(true)}
       onMouseLeave={() => setShowOptions(false)}
     >
@@ -160,11 +160,11 @@ function ContinentCard({ continent }) {
         style={{ background: `linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%)` }}
       />
 
-      <div className="relative p-5 h-full flex flex-col justify-end">
+      <div className="relative p-4 h-full flex flex-col justify-end">
         <div className="flex items-end justify-between mb-2">
           <div>
-            <span className="text-2xl">{continent.emoji}</span>
-            <h3 className="text-xl font-semibold text-white">{continent.name}</h3>
+            <span className="text-4xl">{continent.emoji}</span>
+            <h3 className="text-lg font-semibold text-white">{continent.name}</h3>
           </div>
           <span className="text-xs px-2 py-1 rounded-full bg-white/20 text-white/90">
             {continent.count}

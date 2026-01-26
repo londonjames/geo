@@ -4,7 +4,7 @@ export const REGIONS = {
   europe: {
     id: 'europe',
     name: 'Europe',
-    emoji: '🇪🇺',
+    emoji: '🌍',
     dataUrl: 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json',
     objectName: 'countries',
     projection: 'mercator',
