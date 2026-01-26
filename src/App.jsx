@@ -4,13 +4,14 @@ import QuizMode from './components/QuizMode';
 import LearnMode from './components/LearnMode';
 import { REGIONS } from './data/regions';
 
+// Alphabetized continents with imagery
 const CONTINENTS = [
-  { id: 'europe', ...REGIONS.europe, gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', count: '44 countries' },
-  { id: 'africa', ...REGIONS.africa, gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', count: '54 countries' },
-  { id: 'asia', ...REGIONS.asia, gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', count: '48 countries' },
-  { id: 'north-america', ...REGIONS['north-america'], gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', count: '23 countries' },
-  { id: 'south-america', ...REGIONS['south-america'], gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', count: '12 countries' },
-  { id: 'oceania', ...REGIONS.oceania, gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', count: '14 countries' },
+  { id: 'africa', ...REGIONS.africa, gradient: 'linear-gradient(135deg, #f5af19 0%, #f12711 100%)', count: '54 countries', image: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=400' },
+  { id: 'asia', ...REGIONS.asia, gradient: 'linear-gradient(135deg, #ee0979 0%, #ff6a00 100%)', count: '48 countries', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400' },
+  { id: 'europe', ...REGIONS.europe, gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', count: '44 countries', image: 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400' },
+  { id: 'north-america', ...REGIONS['north-america'], gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)', count: '23 countries', image: 'https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?w=400' },
+  { id: 'oceania', ...REGIONS.oceania, gradient: 'linear-gradient(135deg, #00c6fb 0%, #005bea 100%)', count: '14 countries', image: 'https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400' },
+  { id: 'south-america', ...REGIONS['south-america'], gradient: 'linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%)', count: '12 countries', image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=400' },
 ];
 
 export default function App() {
@@ -144,36 +145,43 @@ function ContinentCard({ continent }) {
   return (
     <div
       className="relative rounded-xl overflow-hidden cursor-pointer group"
-      style={{ backgroundColor: '#252525' }}
+      style={{ backgroundColor: '#252525', minHeight: '180px' }}
       onMouseEnter={() => setShowOptions(true)}
       onMouseLeave={() => setShowOptions(false)}
     >
+      {/* Background image */}
       <div
-        className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity"
-        style={{ background: continent.gradient }}
+        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+        style={{ backgroundImage: `url(${continent.image})` }}
+      />
+      {/* Gradient overlay */}
+      <div
+        className="absolute inset-0 opacity-80 group-hover:opacity-70 transition-opacity"
+        style={{ background: `linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%)` }}
       />
 
-      <div className="relative p-5">
-        <div className="flex items-start justify-between mb-3">
-          <span className="text-3xl">{continent.emoji}</span>
-          <span className="text-xs px-2 py-1 rounded-full bg-black/30 text-white/80">
+      <div className="relative p-5 h-full flex flex-col justify-end">
+        <div className="flex items-end justify-between mb-2">
+          <div>
+            <span className="text-2xl">{continent.emoji}</span>
+            <h3 className="text-xl font-semibold text-white">{continent.name}</h3>
+          </div>
+          <span className="text-xs px-2 py-1 rounded-full bg-white/20 text-white/90">
             {continent.count}
           </span>
         </div>
-
-        <h3 className="text-xl font-semibold text-white mb-4">{continent.name}</h3>
 
         {/* Options */}
         <div className={`flex gap-2 transition-all duration-200 ${showOptions ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
           <Link
             to={`/quiz/${continent.id}`}
-            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors"
+            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors backdrop-blur-sm"
           >
             Quiz
           </Link>
           <Link
             to={`/learn/${continent.id}`}
-            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors"
+            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors backdrop-blur-sm"
           >
             Learn
           </Link>
