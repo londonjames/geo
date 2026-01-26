@@ -38,7 +38,7 @@ function NavBar() {
           className="text-sm font-medium tracking-widest uppercase hover:opacity-60 transition-opacity"
           style={{ color: '#e0e0e0', letterSpacing: '0.12em' }}
         >
-          Geography Explorer
+          Geo Explorer
         </Link>
       </div>
     </header>
@@ -53,7 +53,7 @@ function HomePage() {
       <div className="max-w-6xl mx-auto px-5 md:px-10 py-5">
         {/* Hero - Single line */}
         <p className="text-lg mb-5" style={{ color: '#888' }}>
-          Interactive maps to master countries, states, and capitals
+          Think you know your way around the world? Prove it.
         </p>
 
         {/* US States - Featured */}
@@ -71,8 +71,8 @@ function HomePage() {
               <div className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%)' }} />
               <div className="relative p-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-1">Quiz: Find the States</h3>
-                  <p className="text-sm text-white/70">Can you locate all 50 states on the map?</p>
+                  <h3 className="text-lg font-semibold text-white mb-1">Quiz Mode</h3>
+                  <p className="text-sm text-white/70">Can you go 50/50 on locating every US state? And how fast?</p>
                 </div>
                 <svg className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -88,8 +88,8 @@ function HomePage() {
               <div className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)' }} />
               <div className="relative p-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-1">Learn: Explore the States</h3>
-                  <p className="text-sm text-white/70">Discover facts, capitals, and fun trivia</p>
+                  <h3 className="text-lg font-semibold text-white mb-1">Learn Mode</h3>
+                  <p className="text-sm text-white/70">What's the biggest state? The smallest? Get the facts.</p>
                 </div>
                 <svg className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -138,25 +138,15 @@ function ContinentCard({ continent }) {
         className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
         style={{ backgroundImage: `url(${continent.image})` }}
       />
-      {/* Gradient overlay */}
+      {/* Gradient overlay - stronger at bottom */}
       <div
         className="absolute inset-0 opacity-80 group-hover:opacity-70 transition-opacity"
-        style={{ background: `linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%)` }}
+        style={{ background: `linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.2) 100%)` }}
       />
 
       <div className="relative p-4 h-full flex flex-col justify-end">
-        <div className="flex items-end justify-between mb-2">
-          <div>
-            <span className="text-4xl">{continent.emoji}</span>
-            <h3 className="text-lg font-semibold text-white">{continent.name}</h3>
-          </div>
-          <span className="text-xs px-2 py-1 rounded-full bg-white/20 text-white/90">
-            {continent.count}
-          </span>
-        </div>
-
-        {/* Options */}
-        <div className={`flex gap-2 transition-all duration-200 ${showOptions ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+        {/* Options - shown on hover, positioned above the title */}
+        <div className={`flex gap-2 mb-2 transition-all duration-200 ${showOptions ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
           <Link
             to={`/quiz/${continent.id}`}
             className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors backdrop-blur-sm"
@@ -169,6 +159,17 @@ function ContinentCard({ continent }) {
           >
             Learn
           </Link>
+        </div>
+
+        {/* Globe, name, and count - always at bottom */}
+        <div className="flex items-end justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-3xl">{continent.emoji}</span>
+            <h3 className="text-lg font-semibold text-white">{continent.name}</h3>
+          </div>
+          <span className="text-xs px-2 py-1 rounded-full bg-white/20 text-white/90">
+            {continent.count}
+          </span>
         </div>
       </div>
     </div>
