@@ -44,7 +44,7 @@ const NUMERIC_TO_ALPHA2 = {
   '798': 'TV', '548': 'VU',
 };
 
-// US State data (we'll use static data for this)
+// US State data
 const US_STATE_DATA = {
   '01': { name: 'Alabama', capital: 'Montgomery', population: 5024279, area: 135767, region: 'South' },
   '02': { name: 'Alaska', capital: 'Juneau', population: 733391, area: 1723337, region: 'West' },
@@ -98,6 +98,19 @@ const US_STATE_DATA = {
   '56': { name: 'Wyoming', capital: 'Cheyenne', population: 576851, area: 253335, region: 'West' },
 };
 
+// Calculate rankings once
+const stateArray = Object.entries(US_STATE_DATA).map(([code, data]) => ({ code, ...data }));
+const byPopulation = [...stateArray].sort((a, b) => b.population - a.population);
+const byArea = [...stateArray].sort((a, b) => b.area - a.area);
+
+const STATE_RANKINGS = {};
+stateArray.forEach(state => {
+  STATE_RANKINGS[state.code] = {
+    populationRank: byPopulation.findIndex(s => s.code === state.code) + 1,
+    areaRank: byArea.findIndex(s => s.code === state.code) + 1,
+  };
+});
+
 // Cache for API responses
 const countryCache = {};
 
@@ -116,11 +129,14 @@ export function useCountryData(numericCode, regionId) {
     // Handle US States differently
     if (regionId === 'us-states') {
       const stateData = US_STATE_DATA[numericCode];
-      if (stateData) {
+      const rankings = STATE_RANKINGS[numericCode];
+      if (stateData && rankings) {
         setData({
           type: 'state',
           ...stateData,
           code: numericCode,
+          populationRank: rankings.populationRank,
+          areaRank: rankings.areaRank,
         });
       }
       setLoading(false);
@@ -194,7 +210,7 @@ export function useCountryData(numericCode, regionId) {
 export function formatPopulation(num) {
   if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + 'B';
   if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
-  if (num >= 1_000) return (num / 1_000).toFixed(1) + 'K';
+  if (num >= 1_000) return (num / 1_000).toFixed(0) + 'K';
   return num.toString();
 }
 
