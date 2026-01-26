@@ -62,9 +62,9 @@ export default function LearnMode({ regionId, onBack }) {
 
   return (
     <div className="h-screen w-screen overflow-x-hidden flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
-      {/* Nav Header */}
+      {/* Nav Header - sticky */}
       <header
-        className="shrink-0"
+        className="shrink-0 sticky top-0 z-30"
         style={{ backgroundColor: '#1c1c1c', borderBottom: '1px solid #333' }}
       >
         <div className="px-5 py-3 flex items-center justify-between">

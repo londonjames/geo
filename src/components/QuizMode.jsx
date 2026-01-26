@@ -375,9 +375,9 @@ export default function QuizMode({ regionId, onBack }) {
   // Playing screen - full height map focus
   return (
     <div className="h-screen w-screen overflow-x-hidden flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
-      {/* Nav bar */}
+      {/* Nav bar - sticky */}
       <header
-        className="shrink-0"
+        className="shrink-0 sticky top-0 z-30"
         style={{ backgroundColor: '#1c1c1c', borderBottom: '1px solid #333' }}
       >
         <div className="px-5 py-3 flex items-center justify-between">
@@ -391,14 +391,6 @@ export default function QuizMode({ regionId, onBack }) {
 
           {/* Stats */}
           <div className="flex items-center gap-4 text-sm">
-            {/* Elapsed Timer - prominent */}
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg" style={{ backgroundColor: '#252525' }}>
-              <svg className="w-4 h-4" style={{ color: '#888' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span className="font-mono font-semibold" style={{ color: '#fff' }}>{formatTime(elapsedTime)}</span>
-            </div>
-
             <span style={{ color: '#fff' }} className="font-semibold">{score}/{questions.length}</span>
             <span style={{ color: '#666' }}>{accuracy}%</span>
             {timeLeft !== null && (
@@ -417,9 +409,19 @@ export default function QuizMode({ regionId, onBack }) {
         </div>
       </header>
 
-      {/* PROMINENT: Current country to find - single line */}
+      {/* Timer - centered and prominent */}
+      <div className="shrink-0 py-2 flex justify-center" style={{ backgroundColor: '#1a1a1a' }}>
+        <div className="flex items-center gap-2 px-4 py-1.5 rounded-full" style={{ backgroundColor: '#252525' }}>
+          <svg className="w-4 h-4" style={{ color: '#888' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="font-mono text-lg font-semibold" style={{ color: '#fff' }}>{formatTime(elapsedTime)}</span>
+        </div>
+      </div>
+
+      {/* Country to find - single line */}
       <div
-        className="shrink-0 px-5 py-3 flex items-center justify-center gap-3"
+        className="shrink-0 px-5 py-2 flex items-center justify-center gap-3"
         style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #333' }}
       >
         <span className="text-sm" style={{ color: '#888' }}>Find</span>
