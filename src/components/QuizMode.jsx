@@ -388,23 +388,37 @@ export default function QuizMode({ regionId, onBack }) {
             Geo Explorer
           </Link>
 
-          {/* Stats */}
-          <div className="flex items-center gap-4 text-sm">
-            <span style={{ color: '#fff' }} className="font-semibold">{score}/{questions.length}</span>
-            <span style={{ color: '#666' }}>{accuracy}%</span>
+          {/* Progress - centered */}
+          <div className="flex items-center gap-3">
+            <div className="w-32 h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#333' }}>
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{ width: `${(score / questions.length) * 100}%`, backgroundColor: '#60a5fa' }}
+              />
+            </div>
+            <span className="text-sm font-semibold" style={{ color: '#fff' }}>{score}/{questions.length}</span>
             {timeLeft !== null && (
-              <span style={{ color: timeLeft < 15 ? '#ef4444' : '#666' }} className={timeLeft < 15 ? 'animate-pulse font-medium' : ''}>
+              <span className="text-sm" style={{ color: timeLeft < 15 ? '#ef4444' : '#666' }}>
                 ⏱ {formatTime(timeLeft)}
               </span>
             )}
-            <button
-              onClick={() => setGameState('menu')}
-              className="px-3 py-1 rounded-lg text-xs"
-              style={{ backgroundColor: '#333', color: '#888' }}
-            >
-              Exit
-            </button>
           </div>
+
+          {/* Restart */}
+          <button
+            onClick={() => {
+              setScore(0);
+              setMisses(0);
+              setCurrentIndex(0);
+              setElapsedTime(0);
+              setTimeLeft(DIFFICULTY_LEVELS[difficulty].time);
+              setQuestions(shuffleArray([...questions]));
+            }}
+            className="text-sm hover:opacity-80 transition-opacity"
+            style={{ color: '#666' }}
+          >
+            Restart
+          </button>
         </div>
       </header>
 
