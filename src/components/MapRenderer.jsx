@@ -11,6 +11,7 @@ export default function MapRenderer({
   hoveredCode,
   interactive = true,
   darkMode = false,
+  fullHeight = false,
 }) {
   const { mapData, loading, error } = useMapData(regionId);
   const region = REGIONS[regionId];
@@ -66,23 +67,25 @@ export default function MapRenderer({
     svg.transition().duration(300).call(zoomRef.current.transform, d3.zoomIdentity);
   }, []);
 
+  const containerStyle = fullHeight
+    ? { height: '100%', width: '100%' }
+    : { height: '70vh', minHeight: '400px', maxHeight: '80vh' };
+
   if (loading) {
     return (
       <div
-        className="rounded-xl flex items-center justify-center"
+        className="flex items-center justify-center"
         style={{
-          backgroundColor: darkMode ? '#333' : '#f0f9ff',
-          border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid #bae6fd',
-          height: '70vh',
-          minHeight: '400px',
+          backgroundColor: darkMode ? '#1e3a5f' : '#f0f9ff',
+          ...containerStyle,
         }}
       >
         <div className="text-center">
           <div
-            className="animate-spin rounded-full h-12 w-12 border-4 border-t-transparent mx-auto mb-3"
+            className="animate-spin rounded-full h-10 w-10 border-3 border-t-transparent mx-auto mb-2"
             style={{ borderColor: darkMode ? '#e0e0e0' : '#6366f1', borderTopColor: 'transparent' }}
           ></div>
-          <p className="font-medium" style={{ color: darkMode ? '#e0e0e0' : '#4338ca' }}>Loading map...</p>
+          <p className="text-sm" style={{ color: darkMode ? '#888' : '#4338ca' }}>Loading map...</p>
         </div>
       </div>
     );
@@ -91,15 +94,15 @@ export default function MapRenderer({
   if (error) {
     return (
       <div
-        className="rounded-xl p-8 text-center"
+        className="flex items-center justify-center"
         style={{
-          backgroundColor: darkMode ? '#3a2a2a' : '#fef2f2',
-          border: darkMode ? '1px solid rgba(239,68,68,0.3)' : '1px solid #fecaca',
+          backgroundColor: darkMode ? '#2a1a1a' : '#fef2f2',
+          ...containerStyle,
         }}
       >
-        <div className="text-4xl mb-3">⚠️</div>
-        <p className="font-medium" style={{ color: '#ef4444' }}>Failed to load map</p>
-        <p className="text-sm mt-1" style={{ color: darkMode ? '#f87171' : '#dc2626' }}>{error}</p>
+        <div className="text-center">
+          <p className="text-sm" style={{ color: '#ef4444' }}>Failed to load map</p>
+        </div>
       </div>
     );
   }
@@ -109,10 +112,10 @@ export default function MapRenderer({
   }
 
   const oceanColor = darkMode ? '#1e3a5f' : '#bfdbfe';
-  const strokeColor = darkMode ? '#1c1c1c' : '#64748b';
+  const strokeColor = darkMode ? '#0d1b2a' : '#64748b';
 
   return (
-    <div className="relative">
+    <div className="relative" style={fullHeight ? { height: '100%' } : {}}>
       {/* Zoom Controls */}
       {interactive && (
         <div
@@ -121,37 +124,34 @@ export default function MapRenderer({
         >
           <button
             onClick={handleZoomIn}
-            className="w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center transition-colors hover:brightness-110"
             style={{
-              backgroundColor: darkMode ? '#444' : '#fff',
-              color: darkMode ? '#e0e0e0' : '#333',
+              backgroundColor: darkMode ? 'rgba(0,0,0,0.5)' : '#fff',
+              color: darkMode ? '#fff' : '#333',
               border: darkMode ? '1px solid rgba(255,255,255,0.2)' : '1px solid #ddd',
             }}
-            title="Zoom in"
           >
             +
           </button>
           <button
             onClick={handleZoomOut}
-            className="w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center transition-colors hover:brightness-110"
             style={{
-              backgroundColor: darkMode ? '#444' : '#fff',
-              color: darkMode ? '#e0e0e0' : '#333',
+              backgroundColor: darkMode ? 'rgba(0,0,0,0.5)' : '#fff',
+              color: darkMode ? '#fff' : '#333',
               border: darkMode ? '1px solid rgba(255,255,255,0.2)' : '1px solid #ddd',
             }}
-            title="Zoom out"
           >
             −
           </button>
           <button
             onClick={handleReset}
-            className="w-8 h-8 rounded-lg text-xs flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-lg text-xs flex items-center justify-center transition-colors hover:brightness-110"
             style={{
-              backgroundColor: darkMode ? '#444' : '#fff',
-              color: darkMode ? '#e0e0e0' : '#333',
+              backgroundColor: darkMode ? 'rgba(0,0,0,0.5)' : '#fff',
+              color: darkMode ? '#fff' : '#333',
               border: darkMode ? '1px solid rgba(255,255,255,0.2)' : '1px solid #ddd',
             }}
-            title="Reset zoom"
           >
             ⟲
           </button>
@@ -163,8 +163,8 @@ export default function MapRenderer({
         <div
           className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 px-3 py-1 rounded-full text-xs"
           style={{
-            backgroundColor: darkMode ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.9)',
-            color: darkMode ? '#999' : '#666',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            color: '#888',
           }}
         >
           Scroll to zoom • Drag to pan
@@ -172,20 +172,20 @@ export default function MapRenderer({
       )}
 
       <div
-        className="rounded-xl overflow-hidden"
+        className={fullHeight ? '' : 'rounded-xl overflow-hidden'}
         style={{
           backgroundColor: oceanColor,
-          border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid #bae6fd',
+          ...(fullHeight ? { height: '100%' } : { border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid #bae6fd' }),
         }}
       >
         <svg
           ref={svgRef}
           viewBox={region.viewBox}
-          className="w-full"
+          preserveAspectRatio="xMidYMid meet"
           style={{
-            height: '70vh',
-            minHeight: '400px',
-            maxHeight: '80vh',
+            width: '100%',
+            height: fullHeight ? '100%' : undefined,
+            ...(fullHeight ? {} : { height: '70vh', minHeight: '400px', maxHeight: '80vh' }),
             cursor: interactive ? 'grab' : 'default',
           }}
         >
