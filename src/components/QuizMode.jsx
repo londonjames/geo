@@ -149,223 +149,192 @@ export default function QuizMode({ regionId, onBack }) {
   const entityLabel = region.entities === 'states' ? 'state' : 'country';
   const entityLabelPlural = region.entities === 'states' ? 'states' : 'countries';
 
-  return (
-    <div className="min-h-screen p-4" style={{ backgroundColor: '#1c1c1c' }}>
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-4">
-          <h1 className="text-3xl font-bold mb-1" style={{ color: '#e0e0e0' }}>
+  // Menu screen
+  if (gameState === 'menu') {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#0d0d0d' }}>
+        <div className="rounded-xl p-6 w-full max-w-sm" style={{ backgroundColor: '#1a1a1a', border: '1px solid #333' }}>
+          <h2 className="text-xl font-bold mb-4 text-center" style={{ color: '#fff' }}>
             {region.emoji} {region.name} Quiz
-          </h1>
-          <p className="text-sm" style={{ color: '#999' }}>Click on the correct {entityLabel}!</p>
-        </div>
+          </h2>
 
-        {gameState === 'menu' && (
-          <div className="rounded-lg p-8 max-w-md mx-auto" style={{ backgroundColor: '#2a2a2a', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <h2 className="text-2xl font-semibold mb-6 text-center" style={{ color: '#e0e0e0' }}>Select Difficulty</h2>
-
-            <div className="space-y-3 mb-6">
-              {Object.entries(DIFFICULTY_LEVELS).map(([level, config]) => (
-                <button
-                  key={level}
-                  onClick={() => setDifficulty(level)}
-                  className="w-full p-4 rounded-lg transition-all text-left"
-                  style={{
-                    backgroundColor: difficulty === level ? '#444' : '#333',
-                    border: difficulty === level ? '2px solid #e0e0e0' : '2px solid rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <div className="font-semibold" style={{ color: '#e0e0e0' }}>{config.label}</div>
-                  <div className="text-sm" style={{ color: '#999' }}>{config.desc}</div>
-                </button>
-              ))}
-            </div>
-
-            {regionId === 'europe' && (
-              <label className="flex items-center gap-3 p-3 rounded-lg mb-6 cursor-pointer" style={{ backgroundColor: '#333' }}>
-                <input
-                  type="checkbox"
-                  checked={includeMicrostates}
-                  onChange={(e) => setIncludeMicrostates(e.target.checked)}
-                  className="w-5 h-5 rounded"
-                />
-                <div>
-                  <div className="font-medium" style={{ color: '#e0e0e0' }}>Include microstates</div>
-                  <div className="text-xs" style={{ color: '#777' }}>Andorra, Monaco, San Marino, Vatican, etc.</div>
-                </div>
-              </label>
-            )}
-
-            <button
-              onClick={startGame}
-              className="w-full py-4 font-bold rounded-lg transition-all text-lg hover:brightness-110"
-              style={{ backgroundColor: '#4a5568', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.2)' }}
-            >
-              Start Quiz
-            </button>
-
-            <p className="text-center text-sm mt-4" style={{ color: '#666' }}>
-              {getEntityList().length} {entityLabelPlural} to identify
-            </p>
-
-            <button
-              onClick={onBack}
-              className="w-full mt-4 py-2 text-sm transition-colors"
-              style={{ color: '#999' }}
-            >
-              ← Back to region selection
-            </button>
-          </div>
-        )}
-
-        {gameState === 'playing' && currentQuestion && (
-          <div className="rounded-lg p-4 md:p-6" style={{ backgroundColor: '#2a2a2a', border: '1px solid rgba(255,255,255,0.1)' }}>
-            {/* Stats Bar */}
-            <div className="flex flex-wrap justify-between items-center gap-3 mb-4 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-              <div className="flex items-center gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold" style={{ color: '#e0e0e0' }}>{score}/{questions.length}</div>
-                  <div className="text-xs" style={{ color: '#777' }}>Score</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-xl font-semibold" style={{ color: '#999' }}>{accuracy}%</div>
-                  <div className="text-xs" style={{ color: '#777' }}>Accuracy</div>
-                </div>
-                {timeLeft !== null && (
-                  <div className="text-center">
-                    <div className={`text-xl font-bold ${timeLeft < 15 ? 'animate-pulse' : ''}`} style={{ color: timeLeft < 15 ? '#ef4444' : '#999' }}>
-                      {formatTime(timeLeft)}
-                    </div>
-                    <div className="text-xs" style={{ color: '#777' }}>Time</div>
-                  </div>
-                )}
-              </div>
-
+          <div className="space-y-2 mb-4">
+            {Object.entries(DIFFICULTY_LEVELS).map(([level, config]) => (
               <button
-                onClick={() => setGameState('menu')}
-                className="px-3 py-1.5 text-sm rounded-lg transition-colors"
-                style={{ color: '#999', backgroundColor: '#333' }}
-              >
-                ← Menu
-              </button>
-            </div>
-
-            {/* Question */}
-            <div className="text-center mb-3">
-              <div className="text-sm" style={{ color: '#777' }}>Find this {entityLabel}:</div>
-              <div className="text-3xl font-bold" style={{ color: '#e0e0e0' }}>{currentQuestion.name}</div>
-
-              {DIFFICULTY_LEVELS[difficulty].hints && (
-                <button
-                  onClick={() => setShowHint(true)}
-                  className="mt-1 text-sm"
-                  style={{ color: showHint ? '#666' : '#999' }}
-                  disabled={showHint}
-                >
-                  {showHint
-                    ? `📍 Look in ${getRegionHint(regionId, currentQuestion.code)}`
-                    : '💡 Need a hint?'}
-                </button>
-              )}
-            </div>
-
-            {/* Feedback */}
-            {feedback && (
-              <div
-                className="text-center py-2 px-4 rounded-lg mb-3 font-medium text-sm"
+                key={level}
+                onClick={() => setDifficulty(level)}
+                className="w-full p-3 rounded-lg transition-all text-left"
                 style={{
-                  backgroundColor: feedback.type === 'correct' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                  color: feedback.type === 'correct' ? '#22c55e' : '#ef4444',
+                  backgroundColor: difficulty === level ? '#333' : '#252525',
+                  border: difficulty === level ? '2px solid #fff' : '2px solid transparent',
                 }}
               >
-                {feedback.message}
-              </div>
+                <div className="font-medium text-sm" style={{ color: '#fff' }}>{config.label}</div>
+                <div className="text-xs" style={{ color: '#888' }}>{config.desc}</div>
+              </button>
+            ))}
+          </div>
+
+          {regionId === 'europe' && (
+            <label className="flex items-center gap-2 p-2 rounded-lg mb-4 cursor-pointer text-sm" style={{ backgroundColor: '#252525' }}>
+              <input
+                type="checkbox"
+                checked={includeMicrostates}
+                onChange={(e) => setIncludeMicrostates(e.target.checked)}
+                className="w-4 h-4 rounded"
+              />
+              <span style={{ color: '#ccc' }}>Include microstates</span>
+            </label>
+          )}
+
+          <button
+            onClick={startGame}
+            className="w-full py-3 font-semibold rounded-lg transition-all hover:brightness-110"
+            style={{ backgroundColor: '#fff', color: '#000' }}
+          >
+            Start Quiz ({getEntityList().length} {entityLabelPlural})
+          </button>
+
+          <button
+            onClick={onBack}
+            className="w-full mt-3 py-2 text-sm transition-colors"
+            style={{ color: '#666' }}
+          >
+            ← Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Finished screen
+  if (gameState === 'finished') {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#0d0d0d' }}>
+        <div className="rounded-xl p-6 w-full max-w-sm text-center" style={{ backgroundColor: '#1a1a1a', border: '1px solid #333' }}>
+          <div className="text-5xl mb-3">
+            {score === questions.length ? '🏆' : score >= questions.length * 0.8 ? '🎉' : score >= questions.length * 0.5 ? '👍' : '📚'}
+          </div>
+          <h2 className="text-2xl font-bold mb-4" style={{ color: '#fff' }}>
+            {score === questions.length ? 'Perfect!' : 'Quiz Complete!'}
+          </h2>
+
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="rounded-lg p-2" style={{ backgroundColor: '#252525' }}>
+              <div className="text-xl font-bold" style={{ color: '#fff' }}>{score}/{questions.length}</div>
+              <div className="text-xs" style={{ color: '#666' }}>Correct</div>
+            </div>
+            <div className="rounded-lg p-2" style={{ backgroundColor: '#252525' }}>
+              <div className="text-xl font-bold" style={{ color: '#22c55e' }}>{accuracy}%</div>
+              <div className="text-xs" style={{ color: '#666' }}>Accuracy</div>
+            </div>
+            <div className="rounded-lg p-2" style={{ backgroundColor: '#252525' }}>
+              <div className="text-xl font-bold" style={{ color: '#ef4444' }}>{incorrectGuesses}</div>
+              <div className="text-xs" style={{ color: '#666' }}>Mistakes</div>
+            </div>
+          </div>
+
+          <div className="flex gap-2 justify-center flex-wrap">
+            <button
+              onClick={startGame}
+              className="px-4 py-2 font-medium rounded-lg"
+              style={{ backgroundColor: '#fff', color: '#000' }}
+            >
+              Play Again
+            </button>
+            <button
+              onClick={onBack}
+              className="px-4 py-2 font-medium rounded-lg"
+              style={{ backgroundColor: '#333', color: '#fff' }}
+            >
+              Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Playing screen - full height map focus
+  return (
+    <div className="h-screen flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
+      {/* Compact top bar */}
+      <div className="shrink-0 px-3 py-2 flex items-center justify-between" style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #333' }}>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setGameState('menu')}
+            className="p-1.5 rounded-lg hover:bg-white/10"
+            style={{ color: '#888' }}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div className="flex items-center gap-3 text-sm">
+            <span style={{ color: '#fff' }} className="font-semibold">{score}/{questions.length}</span>
+            <span style={{ color: '#666' }}>{accuracy}%</span>
+            {timeLeft !== null && (
+              <span style={{ color: timeLeft < 15 ? '#ef4444' : '#666' }} className={timeLeft < 15 ? 'animate-pulse font-medium' : ''}>
+                {formatTime(timeLeft)}
+              </span>
             )}
-
-            {/* Map */}
-            <MapRenderer
-              regionId={regionId}
-              onFeatureClick={handleFeatureClick}
-              onFeatureHover={setHoveredCode}
-              getFeatureColor={getFeatureColor}
-              hoveredCode={hoveredCode}
-              darkMode={true}
-            />
-
-            {/* Progress */}
-            <div className="mt-3">
-              <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#333' }}>
-                <div
-                  className="h-full transition-all duration-300"
-                  style={{ width: `${(score / questions.length) * 100}%`, backgroundColor: '#e0e0e0' }}
-                />
-              </div>
-              <div className="text-xs mt-1 text-center" style={{ color: '#777' }}>
-                {score} of {questions.length} {entityLabelPlural} found
-              </div>
-            </div>
           </div>
+        </div>
+
+        {/* Current question - prominent */}
+        <div className="flex items-center gap-2">
+          <span className="text-xl font-bold" style={{ color: '#fff' }}>{currentQuestion?.name}</span>
+          {DIFFICULTY_LEVELS[difficulty].hints && !showHint && (
+            <button
+              onClick={() => setShowHint(true)}
+              className="text-xs px-2 py-1 rounded"
+              style={{ backgroundColor: '#333', color: '#888' }}
+            >
+              Hint
+            </button>
+          )}
+        </div>
+
+        {/* Hint display */}
+        {showHint && (
+          <span className="text-xs" style={{ color: '#888' }}>
+            📍 {getRegionHint(regionId, currentQuestion?.code)}
+          </span>
         )}
+      </div>
 
-        {gameState === 'finished' && (
-          <div className="rounded-lg p-8 max-w-lg mx-auto text-center" style={{ backgroundColor: '#2a2a2a', border: '1px solid rgba(255,255,255,0.1)' }}>
-            <div className="text-6xl mb-4">
-              {score === questions.length ? '🏆' : score >= questions.length * 0.8 ? '🎉' : score >= questions.length * 0.5 ? '👍' : '📚'}
-            </div>
-            <h2 className="text-3xl font-bold mb-2" style={{ color: '#e0e0e0' }}>
-              {score === questions.length ? 'Perfect!' : 'Quiz Complete!'}
-            </h2>
+      {/* Feedback toast */}
+      {feedback && (
+        <div
+          className="absolute top-14 left-1/2 -translate-x-1/2 z-20 px-4 py-2 rounded-lg font-medium text-sm"
+          style={{
+            backgroundColor: feedback.type === 'correct' ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)',
+            color: '#fff',
+          }}
+        >
+          {feedback.message}
+        </div>
+      )}
 
-            <div className="grid grid-cols-3 gap-3 my-6">
-              <div className="rounded-lg p-3" style={{ backgroundColor: '#333' }}>
-                <div className="text-2xl font-bold" style={{ color: '#e0e0e0' }}>{score}/{questions.length}</div>
-                <div className="text-xs" style={{ color: '#777' }}>Correct</div>
-              </div>
-              <div className="rounded-lg p-3" style={{ backgroundColor: '#333' }}>
-                <div className="text-2xl font-bold" style={{ color: '#22c55e' }}>{accuracy}%</div>
-                <div className="text-xs" style={{ color: '#777' }}>Accuracy</div>
-              </div>
-              <div className="rounded-lg p-3" style={{ backgroundColor: '#333' }}>
-                <div className="text-2xl font-bold" style={{ color: '#ef4444' }}>{incorrectGuesses}</div>
-                <div className="text-xs" style={{ color: '#777' }}>Mistakes</div>
-              </div>
-            </div>
+      {/* Map fills remaining space */}
+      <div className="flex-1 min-h-0">
+        <MapRenderer
+          regionId={regionId}
+          onFeatureClick={handleFeatureClick}
+          onFeatureHover={setHoveredCode}
+          getFeatureColor={getFeatureColor}
+          hoveredCode={hoveredCode}
+          darkMode={true}
+          fullHeight={true}
+        />
+      </div>
 
-            <p className="mb-6" style={{ color: '#999' }}>
-              {score === questions.length
-                ? `You're a ${region.name} geography expert! 🌟`
-                : score >= questions.length * 0.8
-                ? `Excellent! You know ${region.name} well!`
-                : score >= questions.length * 0.5
-                ? `Good job! Keep exploring ${region.name}!`
-                : "Keep studying the map!"}
-            </p>
-
-            <div className="flex gap-3 justify-center flex-wrap">
-              <button
-                onClick={startGame}
-                className="px-5 py-2.5 font-semibold rounded-lg transition-all hover:brightness-110"
-                style={{ backgroundColor: '#4a5568', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.2)' }}
-              >
-                Play Again
-              </button>
-              <button
-                onClick={() => setGameState('menu')}
-                className="px-5 py-2.5 font-semibold rounded-lg transition-all hover:brightness-110"
-                style={{ backgroundColor: '#333', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.1)' }}
-              >
-                Menu
-              </button>
-              <button
-                onClick={onBack}
-                className="px-5 py-2.5 font-semibold rounded-lg transition-all hover:brightness-110"
-                style={{ backgroundColor: '#333', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.1)' }}
-              >
-                Regions
-              </button>
-            </div>
-          </div>
-        )}
+      {/* Progress bar at bottom */}
+      <div className="shrink-0 h-1" style={{ backgroundColor: '#1a1a1a' }}>
+        <div
+          className="h-full transition-all duration-300"
+          style={{ width: `${(score / questions.length) * 100}%`, backgroundColor: '#22c55e' }}
+        />
       </div>
     </div>
   );
