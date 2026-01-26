@@ -2,16 +2,16 @@ import React from 'react';
 import { useCountryData, formatPopulation, formatArea } from '../hooks/useCountryData';
 import { getCountryFacts } from '../data/countryFacts';
 
-// Category display config
+// Category display config with dark theme colors
 const CATEGORY_CONFIG = {
-  records: { emoji: '🏆', title: 'Records & Extremes', color: 'bg-yellow-50 border-yellow-200' },
-  food: { emoji: '🍜', title: 'Food', color: 'bg-orange-50 border-orange-200' },
-  athletes: { emoji: '⚽', title: 'Famous Athletes', color: 'bg-green-50 border-green-200' },
-  gaming: { emoji: '🎮', title: 'From Here', color: 'bg-purple-50 border-purple-200' },
-  animals: { emoji: '🐍', title: 'Dangerous Animals', color: 'bg-red-50 border-red-200' },
-  traditions: { emoji: '🎭', title: 'Bizarre Traditions', color: 'bg-pink-50 border-pink-200' },
-  history: { emoji: '📜', title: 'History', color: 'bg-amber-50 border-amber-200' },
-  wildFact: { emoji: '🤯', title: 'Wild Fact', color: 'bg-cyan-50 border-cyan-200' },
+  records: { emoji: '🏆', title: 'Records & Extremes', bgColor: '#3d3520', borderColor: 'rgba(234,179,8,0.3)' },
+  food: { emoji: '🍜', title: 'Food', bgColor: '#3d2f20', borderColor: 'rgba(249,115,22,0.3)' },
+  athletes: { emoji: '⚽', title: 'Famous Athletes', bgColor: '#203d25', borderColor: 'rgba(34,197,94,0.3)' },
+  gaming: { emoji: '🎮', title: 'From Here', bgColor: '#302040', borderColor: 'rgba(168,85,247,0.3)' },
+  animals: { emoji: '🐍', title: 'Dangerous Animals', bgColor: '#3d2020', borderColor: 'rgba(239,68,68,0.3)' },
+  traditions: { emoji: '🎭', title: 'Bizarre Traditions', bgColor: '#3d2035', borderColor: 'rgba(236,72,153,0.3)' },
+  history: { emoji: '📜', title: 'History', bgColor: '#3d3020', borderColor: 'rgba(245,158,11,0.3)' },
+  wildFact: { emoji: '🤯', title: 'Wild Fact', bgColor: '#203540', borderColor: 'rgba(6,182,212,0.3)' },
 };
 
 export default function InfoPanel({ code, name, regionId, onClose }) {
@@ -21,19 +21,26 @@ export default function InfoPanel({ code, name, regionId, onClose }) {
   if (!code) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl z-50 overflow-y-auto transform transition-transform duration-300">
+    <div
+      className="fixed inset-y-0 right-0 w-full sm:w-96 shadow-2xl z-50 overflow-y-auto transform transition-transform duration-300"
+      style={{ backgroundColor: '#2a2a2a' }}
+    >
       {/* Header */}
-      <div className="sticky top-0 bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3 flex items-center justify-between z-10">
+      <div
+        className="sticky top-0 px-4 py-3 flex items-center justify-between z-10"
+        style={{ backgroundColor: '#333', borderBottom: '1px solid rgba(255,255,255,0.1)' }}
+      >
         <div className="flex items-center gap-2">
           {data?.flagEmoji && <span className="text-2xl">{data.flagEmoji}</span>}
-          <h2 className="text-xl font-bold text-white truncate">{name}</h2>
+          <h2 className="text-xl font-bold truncate" style={{ color: '#e0e0e0' }}>{name}</h2>
         </div>
         <button
           onClick={onClose}
-          className="p-2 hover:bg-white/20 rounded-full transition-colors"
+          className="p-2 rounded-full transition-colors"
+          style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
           aria-label="Close"
         >
-          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5" style={{ color: '#e0e0e0' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -43,14 +50,14 @@ export default function InfoPanel({ code, name, regionId, onClose }) {
       <div className="p-4">
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-4 border-indigo-500 border-t-transparent"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-t-transparent" style={{ borderColor: '#e0e0e0', borderTopColor: 'transparent' }}></div>
           </div>
         )}
 
         {error && (
-          <div className="bg-red-50 text-red-700 p-4 rounded-lg text-center">
-            <p className="font-medium">Failed to load data</p>
-            <p className="text-sm mt-1">{error}</p>
+          <div className="p-4 rounded-lg text-center" style={{ backgroundColor: '#3d2020', border: '1px solid rgba(239,68,68,0.3)' }}>
+            <p className="font-medium" style={{ color: '#ef4444' }}>Failed to load data</p>
+            <p className="text-sm mt-1" style={{ color: '#f87171' }}>{error}</p>
           </div>
         )}
 
@@ -70,14 +77,15 @@ function CountryInfo({ data, funFacts }) {
           <img
             src={data.flag}
             alt={`Flag of ${data.name}`}
-            className="w-40 h-auto mx-auto shadow-lg rounded-lg border"
+            className="w-40 h-auto mx-auto shadow-lg rounded-lg"
+            style={{ border: '1px solid rgba(255,255,255,0.1)' }}
           />
         </div>
       )}
 
       {/* Quick Facts - Always Show */}
-      <div className="bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl p-4 border-2 border-indigo-200">
-        <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2 text-lg">
+      <div className="rounded-xl p-4" style={{ backgroundColor: '#333', border: '2px solid rgba(255,255,255,0.15)' }}>
+        <h3 className="font-bold mb-3 flex items-center gap-2 text-lg" style={{ color: '#e0e0e0' }}>
           <span>⚡</span> Quick Facts
         </h3>
         <div className="grid grid-cols-2 gap-3">
@@ -101,7 +109,8 @@ function CountryInfo({ data, funFacts }) {
                 emoji={config.emoji}
                 title={config.title}
                 facts={facts}
-                colorClass={config.color}
+                bgColor={config.bgColor}
+                borderColor={config.borderColor}
               />
             );
           })}
@@ -109,8 +118,8 @@ function CountryInfo({ data, funFacts }) {
       ) : (
         // Fallback for countries without curated facts
         <div className="space-y-3">
-          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-            <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+          <div className="rounded-xl p-4" style={{ backgroundColor: '#333', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <h3 className="font-semibold mb-2 flex items-center gap-2" style={{ color: '#e0e0e0' }}>
               <span>🌍</span> Geography
             </h3>
             <div className="space-y-1 text-sm">
@@ -124,8 +133,8 @@ function CountryInfo({ data, funFacts }) {
             </div>
           </div>
 
-          <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 text-center">
-            <p className="text-blue-700 text-sm">
+          <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#203540', border: '1px solid rgba(96,165,250,0.3)' }}>
+            <p className="text-sm" style={{ color: '#60a5fa' }}>
               🔍 More fun facts coming soon for this country!
             </p>
           </div>
@@ -138,7 +147,8 @@ function CountryInfo({ data, funFacts }) {
           href={data.maps.googleMaps}
           target="_blank"
           rel="noopener noreferrer"
-          className="block text-center py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-colors text-lg"
+          className="block text-center py-3 rounded-xl font-bold transition-colors text-lg hover:brightness-110"
+          style={{ backgroundColor: '#4a5568', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.2)' }}
         >
           🗺️ See on Map
         </a>
@@ -151,8 +161,8 @@ function StateInfo({ data }) {
   return (
     <div className="space-y-4">
       {/* Quick Facts */}
-      <div className="bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl p-4 border-2 border-indigo-200">
-        <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2 text-lg">
+      <div className="rounded-xl p-4" style={{ backgroundColor: '#333', border: '2px solid rgba(255,255,255,0.15)' }}>
+        <h3 className="font-bold mb-3 flex items-center gap-2 text-lg" style={{ color: '#e0e0e0' }}>
           <span>⚡</span> Quick Facts
         </h3>
         <div className="grid grid-cols-2 gap-3">
@@ -164,8 +174,8 @@ function StateInfo({ data }) {
       </div>
 
       {/* More Info */}
-      <div className="bg-green-50 rounded-xl p-4 border border-green-200">
-        <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+      <div className="rounded-xl p-4" style={{ backgroundColor: '#203d25', border: '1px solid rgba(34,197,94,0.3)' }}>
+        <h3 className="font-semibold mb-2 flex items-center gap-2" style={{ color: '#e0e0e0' }}>
           <span>📈</span> Stats
         </h3>
         <div className="space-y-1 text-sm">
@@ -176,8 +186,8 @@ function StateInfo({ data }) {
         </div>
       </div>
 
-      <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 text-center">
-        <p className="text-blue-700 text-sm">
+      <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#203540', border: '1px solid rgba(96,165,250,0.3)' }}>
+        <p className="text-sm" style={{ color: '#60a5fa' }}>
           🔍 More state facts coming soon!
         </p>
       </div>
@@ -187,23 +197,23 @@ function StateInfo({ data }) {
 
 function QuickStat({ label, value }) {
   return (
-    <div className="bg-white rounded-lg p-2 text-center shadow-sm">
-      <div className="text-lg font-bold text-indigo-700">{value}</div>
-      <div className="text-xs text-gray-500 font-medium">{label}</div>
+    <div className="rounded-lg p-2 text-center" style={{ backgroundColor: '#444' }}>
+      <div className="text-lg font-bold" style={{ color: '#e0e0e0' }}>{value}</div>
+      <div className="text-xs font-medium" style={{ color: '#999' }}>{label}</div>
     </div>
   );
 }
 
-function FunFactCard({ emoji, title, facts, colorClass }) {
+function FunFactCard({ emoji, title, facts, bgColor, borderColor }) {
   return (
-    <div className={`${colorClass} rounded-xl p-4 border-2`}>
-      <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
+    <div className="rounded-xl p-4" style={{ backgroundColor: bgColor, border: `2px solid ${borderColor}` }}>
+      <h3 className="font-bold mb-2 flex items-center gap-2" style={{ color: '#e0e0e0' }}>
         <span className="text-xl">{emoji}</span> {title}
       </h3>
       <ul className="space-y-1">
         {facts.map((fact, i) => (
-          <li key={i} className="text-gray-700 text-sm flex items-start gap-2">
-            <span className="text-gray-400 mt-1">•</span>
+          <li key={i} className="text-sm flex items-start gap-2" style={{ color: '#ccc' }}>
+            <span className="mt-1" style={{ color: '#777' }}>•</span>
             <span>{fact}</span>
           </li>
         ))}
@@ -215,8 +225,8 @@ function FunFactCard({ emoji, title, facts, colorClass }) {
 function InfoRow({ label, value }) {
   return (
     <div className="flex justify-between">
-      <span className="text-gray-600">{label}</span>
-      <span className="font-medium text-gray-800">{value}</span>
+      <span style={{ color: '#999' }}>{label}</span>
+      <span className="font-medium" style={{ color: '#e0e0e0' }}>{value}</span>
     </div>
   );
 }

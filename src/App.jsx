@@ -14,7 +14,7 @@ const REGION_LIST = [
 ];
 
 export default function App() {
-  const [view, setView] = useState('home'); // home, quiz, learn
+  const [view, setView] = useState('home');
   const [selectedRegion, setSelectedRegion] = useState(null);
 
   const handleSelectRegion = (regionId, mode) => {
@@ -36,21 +36,21 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen p-4" style={{ backgroundColor: '#1c1c1c' }}>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 pt-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-indigo-900 mb-2">
+          <h1 className="text-4xl md:text-5xl font-bold mb-2" style={{ color: '#e0e0e0' }}>
             🌍 Geography Explorer
           </h1>
-          <p className="text-indigo-600 text-lg">
+          <p className="text-lg" style={{ color: '#999' }}>
             Learn about countries and test your knowledge
           </p>
         </div>
 
         {/* Mode Selection */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+        <div className="rounded-lg p-6 mb-6" style={{ backgroundColor: '#2a2a2a', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <h2 className="text-xl font-semibold mb-4 text-center" style={{ color: '#e0e0e0' }}>
             Choose a Mode
           </h2>
           <div className="grid md:grid-cols-2 gap-4">
@@ -58,20 +58,18 @@ export default function App() {
               emoji="🎯"
               title="Quiz Mode"
               description="Test your knowledge! Find countries on the map as quickly as you can."
-              color="indigo"
             />
             <ModeCard
               emoji="📚"
               title="Learn Mode"
               description="Explore countries! Click anywhere to discover facts, stats, and more."
-              color="emerald"
             />
           </div>
         </div>
 
         {/* Region Selection */}
-        <div className="bg-white rounded-2xl shadow-xl p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+        <div className="rounded-lg p-6" style={{ backgroundColor: '#2a2a2a', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <h2 className="text-xl font-semibold mb-4 text-center" style={{ color: '#e0e0e0' }}>
             Select a Region
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -87,7 +85,7 @@ export default function App() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-gray-400 text-sm mt-8 pb-4">
+        <p className="text-center text-sm mt-8 pb-4" style={{ color: '#666' }}>
           Built with React, D3.js, and data from REST Countries API
         </p>
       </div>
@@ -95,29 +93,36 @@ export default function App() {
   );
 }
 
-function ModeCard({ emoji, title, description, color }) {
-  const colors = {
-    indigo: 'bg-indigo-50 border-indigo-200',
-    emerald: 'bg-emerald-50 border-emerald-200',
-  };
-
+function ModeCard({ emoji, title, description }) {
   return (
-    <div className={`${colors[color]} border-2 rounded-xl p-4 text-center`}>
-      <div className="text-4xl mb-2">{emoji}</div>
-      <h3 className="font-bold text-gray-800 text-lg">{title}</h3>
-      <p className="text-gray-600 text-sm mt-1">{description}</p>
+    <div
+      className="rounded-lg p-5 text-center transition-all duration-200 cursor-pointer hover:scale-105"
+      style={{
+        backgroundColor: '#333',
+        border: '2px solid rgba(255,255,255,0.15)',
+      }}
+    >
+      <div className="text-4xl mb-3">{emoji}</div>
+      <h3 className="font-semibold text-lg mb-1" style={{ color: '#e0e0e0' }}>{title}</h3>
+      <p className="text-sm" style={{ color: '#999' }}>{description}</p>
     </div>
   );
 }
 
 function RegionCard({ region, onQuiz, onLearn }) {
   return (
-    <div className="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-colors">
+    <div
+      className="rounded-lg p-4 transition-all duration-200"
+      style={{
+        backgroundColor: '#333',
+        border: '1px solid rgba(255,255,255,0.1)',
+      }}
+    >
       <div className="flex items-center gap-3 mb-3">
         <span className="text-3xl">{region.emoji}</span>
         <div>
-          <h3 className="font-bold text-gray-800">{region.name}</h3>
-          <p className="text-gray-500 text-xs">
+          <h3 className="font-semibold" style={{ color: '#e0e0e0' }}>{region.name}</h3>
+          <p className="text-xs" style={{ color: '#777' }}>
             {region.entities === 'states' ? '50 states' : 'Countries'}
           </p>
         </div>
@@ -125,13 +130,23 @@ function RegionCard({ region, onQuiz, onLearn }) {
       <div className="flex gap-2">
         <button
           onClick={onQuiz}
-          className="flex-1 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="flex-1 py-2 px-3 text-sm font-medium rounded transition-all duration-200 hover:brightness-110"
+          style={{
+            backgroundColor: '#4a5568',
+            color: '#e0e0e0',
+            border: '1px solid rgba(255,255,255,0.2)',
+          }}
         >
           Quiz
         </button>
         <button
           onClick={onLearn}
-          className="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="flex-1 py-2 px-3 text-sm font-medium rounded transition-all duration-200 hover:brightness-110"
+          style={{
+            backgroundColor: '#4a5568',
+            color: '#e0e0e0',
+            border: '1px solid rgba(255,255,255,0.2)',
+          }}
         >
           Learn
         </button>

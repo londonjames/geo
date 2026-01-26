@@ -41,7 +41,7 @@ function shuffleArray(array) {
 export default function QuizMode({ regionId, onBack }) {
   const region = REGIONS[regionId];
 
-  const [gameState, setGameState] = useState('menu'); // menu, playing, finished
+  const [gameState, setGameState] = useState('menu');
   const [difficulty, setDifficulty] = useState('easy');
   const [includeMicrostates, setIncludeMicrostates] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -56,14 +56,12 @@ export default function QuizMode({ regionId, onBack }) {
 
   const currentQuestion = questions[currentIndex];
 
-  // Get all entities for this region
   const getEntityList = useCallback(() => {
     const data = REGION_DATA[regionId];
     if (!data) return [];
 
     const allCodes = [];
     for (const [code, name] of Object.entries(data)) {
-      // For Europe, optionally exclude microstates
       if (regionId === 'europe' && !includeMicrostates && EUROPE_MICROSTATES.includes(code)) {
         continue;
       }
@@ -73,7 +71,6 @@ export default function QuizMode({ regionId, onBack }) {
     return allCodes;
   }, [regionId, includeMicrostates]);
 
-  // Timer effect
   useEffect(() => {
     if (gameState !== 'playing' || !DIFFICULTY_LEVELS[difficulty].time) return;
     if (timeLeft === 0) {
@@ -136,7 +133,7 @@ export default function QuizMode({ regionId, onBack }) {
     if (answeredItems[code] === 'correct') return '#22c55e';
     if (answeredItems[code] === 'wrong') return '#ef4444';
     if (hoveredCode === code && gameState === 'playing' && !answeredItems[code]) return '#60a5fa';
-    return '#cbd5e1';
+    return '#4a5568';
   }, [answeredItems, hoveredCode, gameState]);
 
   const formatTime = (seconds) => {
@@ -153,66 +150,68 @@ export default function QuizMode({ regionId, onBack }) {
   const entityLabelPlural = region.entities === 'states' ? 'states' : 'countries';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen p-4" style={{ backgroundColor: '#1c1c1c' }}>
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-4">
-          <h1 className="text-3xl font-bold text-indigo-900 mb-1">
+          <h1 className="text-3xl font-bold mb-1" style={{ color: '#e0e0e0' }}>
             {region.emoji} {region.name} Quiz
           </h1>
-          <p className="text-indigo-600 text-sm">Click on the correct {entityLabel}!</p>
+          <p className="text-sm" style={{ color: '#999' }}>Click on the correct {entityLabel}!</p>
         </div>
 
         {gameState === 'menu' && (
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Select Difficulty</h2>
+          <div className="rounded-lg p-8 max-w-md mx-auto" style={{ backgroundColor: '#2a2a2a', border: '1px solid rgba(255,255,255,0.1)' }}>
+            <h2 className="text-2xl font-semibold mb-6 text-center" style={{ color: '#e0e0e0' }}>Select Difficulty</h2>
 
             <div className="space-y-3 mb-6">
               {Object.entries(DIFFICULTY_LEVELS).map(([level, config]) => (
                 <button
                   key={level}
                   onClick={() => setDifficulty(level)}
-                  className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
-                    difficulty === level
-                      ? 'border-indigo-500 bg-indigo-50'
-                      : 'border-gray-200 hover:border-indigo-300'
-                  }`}
+                  className="w-full p-4 rounded-lg transition-all text-left"
+                  style={{
+                    backgroundColor: difficulty === level ? '#444' : '#333',
+                    border: difficulty === level ? '2px solid #e0e0e0' : '2px solid rgba(255,255,255,0.1)',
+                  }}
                 >
-                  <div className="font-semibold text-gray-800">{config.label}</div>
-                  <div className="text-sm text-gray-500">{config.desc}</div>
+                  <div className="font-semibold" style={{ color: '#e0e0e0' }}>{config.label}</div>
+                  <div className="text-sm" style={{ color: '#999' }}>{config.desc}</div>
                 </button>
               ))}
             </div>
 
             {regionId === 'europe' && (
-              <label className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 mb-6 cursor-pointer">
+              <label className="flex items-center gap-3 p-3 rounded-lg mb-6 cursor-pointer" style={{ backgroundColor: '#333' }}>
                 <input
                   type="checkbox"
                   checked={includeMicrostates}
                   onChange={(e) => setIncludeMicrostates(e.target.checked)}
-                  className="w-5 h-5 text-indigo-600 rounded"
+                  className="w-5 h-5 rounded"
                 />
                 <div>
-                  <div className="font-medium text-gray-700">Include microstates</div>
-                  <div className="text-xs text-gray-500">Andorra, Monaco, San Marino, Vatican, etc.</div>
+                  <div className="font-medium" style={{ color: '#e0e0e0' }}>Include microstates</div>
+                  <div className="text-xs" style={{ color: '#777' }}>Andorra, Monaco, San Marino, Vatican, etc.</div>
                 </div>
               </label>
             )}
 
             <button
               onClick={startGame}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors text-lg"
+              className="w-full py-4 font-bold rounded-lg transition-all text-lg hover:brightness-110"
+              style={{ backgroundColor: '#4a5568', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.2)' }}
             >
               Start Quiz
             </button>
 
-            <p className="text-center text-gray-400 text-sm mt-4">
+            <p className="text-center text-sm mt-4" style={{ color: '#666' }}>
               {getEntityList().length} {entityLabelPlural} to identify
             </p>
 
             <button
               onClick={onBack}
-              className="w-full mt-4 py-2 text-gray-600 hover:text-gray-800 text-sm"
+              className="w-full mt-4 py-2 text-sm transition-colors"
+              style={{ color: '#999' }}
             >
               ← Back to region selection
             </button>
@@ -220,31 +219,32 @@ export default function QuizMode({ regionId, onBack }) {
         )}
 
         {gameState === 'playing' && currentQuestion && (
-          <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6">
+          <div className="rounded-lg p-4 md:p-6" style={{ backgroundColor: '#2a2a2a', border: '1px solid rgba(255,255,255,0.1)' }}>
             {/* Stats Bar */}
-            <div className="flex flex-wrap justify-between items-center gap-3 mb-4 pb-3 border-b">
+            <div className="flex flex-wrap justify-between items-center gap-3 mb-4 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="flex items-center gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-indigo-600">{score}/{questions.length}</div>
-                  <div className="text-xs text-gray-500">Score</div>
+                  <div className="text-2xl font-bold" style={{ color: '#e0e0e0' }}>{score}/{questions.length}</div>
+                  <div className="text-xs" style={{ color: '#777' }}>Score</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-xl font-semibold text-gray-700">{accuracy}%</div>
-                  <div className="text-xs text-gray-500">Accuracy</div>
+                  <div className="text-xl font-semibold" style={{ color: '#999' }}>{accuracy}%</div>
+                  <div className="text-xs" style={{ color: '#777' }}>Accuracy</div>
                 </div>
                 {timeLeft !== null && (
                   <div className="text-center">
-                    <div className={`text-xl font-bold ${timeLeft < 15 ? 'text-red-500 animate-pulse' : 'text-gray-700'}`}>
+                    <div className={`text-xl font-bold ${timeLeft < 15 ? 'animate-pulse' : ''}`} style={{ color: timeLeft < 15 ? '#ef4444' : '#999' }}>
                       {formatTime(timeLeft)}
                     </div>
-                    <div className="text-xs text-gray-500">Time</div>
+                    <div className="text-xs" style={{ color: '#777' }}>Time</div>
                   </div>
                 )}
               </div>
 
               <button
                 onClick={() => setGameState('menu')}
-                className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+                className="px-3 py-1.5 text-sm rounded-lg transition-colors"
+                style={{ color: '#999', backgroundColor: '#333' }}
               >
                 ← Menu
               </button>
@@ -252,13 +252,14 @@ export default function QuizMode({ regionId, onBack }) {
 
             {/* Question */}
             <div className="text-center mb-3">
-              <div className="text-sm text-gray-500">Find this {entityLabel}:</div>
-              <div className="text-3xl font-bold text-indigo-800">{currentQuestion.name}</div>
+              <div className="text-sm" style={{ color: '#777' }}>Find this {entityLabel}:</div>
+              <div className="text-3xl font-bold" style={{ color: '#e0e0e0' }}>{currentQuestion.name}</div>
 
               {DIFFICULTY_LEVELS[difficulty].hints && (
                 <button
                   onClick={() => setShowHint(true)}
-                  className={`mt-1 text-sm ${showHint ? 'text-indigo-400' : 'text-indigo-500 hover:text-indigo-700'}`}
+                  className="mt-1 text-sm"
+                  style={{ color: showHint ? '#666' : '#999' }}
                   disabled={showHint}
                 >
                   {showHint
@@ -270,9 +271,13 @@ export default function QuizMode({ regionId, onBack }) {
 
             {/* Feedback */}
             {feedback && (
-              <div className={`text-center py-2 px-4 rounded-lg mb-3 font-medium text-sm ${
-                feedback.type === 'correct' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-              }`}>
+              <div
+                className="text-center py-2 px-4 rounded-lg mb-3 font-medium text-sm"
+                style={{
+                  backgroundColor: feedback.type === 'correct' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                  color: feedback.type === 'correct' ? '#22c55e' : '#ef4444',
+                }}
+              >
                 {feedback.message}
               </div>
             )}
@@ -284,17 +289,18 @@ export default function QuizMode({ regionId, onBack }) {
               onFeatureHover={setHoveredCode}
               getFeatureColor={getFeatureColor}
               hoveredCode={hoveredCode}
+              darkMode={true}
             />
 
             {/* Progress */}
             <div className="mt-3">
-              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: '#333' }}>
                 <div
-                  className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300"
-                  style={{ width: `${(score / questions.length) * 100}%` }}
+                  className="h-full transition-all duration-300"
+                  style={{ width: `${(score / questions.length) * 100}%`, backgroundColor: '#e0e0e0' }}
                 />
               </div>
-              <div className="text-xs text-gray-500 mt-1 text-center">
+              <div className="text-xs mt-1 text-center" style={{ color: '#777' }}>
                 {score} of {questions.length} {entityLabelPlural} found
               </div>
             </div>
@@ -302,30 +308,30 @@ export default function QuizMode({ regionId, onBack }) {
         )}
 
         {gameState === 'finished' && (
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-lg mx-auto text-center">
+          <div className="rounded-lg p-8 max-w-lg mx-auto text-center" style={{ backgroundColor: '#2a2a2a', border: '1px solid rgba(255,255,255,0.1)' }}>
             <div className="text-6xl mb-4">
               {score === questions.length ? '🏆' : score >= questions.length * 0.8 ? '🎉' : score >= questions.length * 0.5 ? '👍' : '📚'}
             </div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            <h2 className="text-3xl font-bold mb-2" style={{ color: '#e0e0e0' }}>
               {score === questions.length ? 'Perfect!' : 'Quiz Complete!'}
             </h2>
 
             <div className="grid grid-cols-3 gap-3 my-6">
-              <div className="bg-indigo-50 rounded-xl p-3">
-                <div className="text-2xl font-bold text-indigo-600">{score}/{questions.length}</div>
-                <div className="text-xs text-gray-500">Correct</div>
+              <div className="rounded-lg p-3" style={{ backgroundColor: '#333' }}>
+                <div className="text-2xl font-bold" style={{ color: '#e0e0e0' }}>{score}/{questions.length}</div>
+                <div className="text-xs" style={{ color: '#777' }}>Correct</div>
               </div>
-              <div className="bg-green-50 rounded-xl p-3">
-                <div className="text-2xl font-bold text-green-600">{accuracy}%</div>
-                <div className="text-xs text-gray-500">Accuracy</div>
+              <div className="rounded-lg p-3" style={{ backgroundColor: '#333' }}>
+                <div className="text-2xl font-bold" style={{ color: '#22c55e' }}>{accuracy}%</div>
+                <div className="text-xs" style={{ color: '#777' }}>Accuracy</div>
               </div>
-              <div className="bg-orange-50 rounded-xl p-3">
-                <div className="text-2xl font-bold text-orange-600">{incorrectGuesses}</div>
-                <div className="text-xs text-gray-500">Mistakes</div>
+              <div className="rounded-lg p-3" style={{ backgroundColor: '#333' }}>
+                <div className="text-2xl font-bold" style={{ color: '#ef4444' }}>{incorrectGuesses}</div>
+                <div className="text-xs" style={{ color: '#777' }}>Mistakes</div>
               </div>
             </div>
 
-            <p className="text-gray-600 mb-6">
+            <p className="mb-6" style={{ color: '#999' }}>
               {score === questions.length
                 ? `You're a ${region.name} geography expert! 🌟`
                 : score >= questions.length * 0.8
@@ -335,22 +341,25 @@ export default function QuizMode({ regionId, onBack }) {
                 : "Keep studying the map!"}
             </p>
 
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-3 justify-center flex-wrap">
               <button
                 onClick={startGame}
-                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors"
+                className="px-5 py-2.5 font-semibold rounded-lg transition-all hover:brightness-110"
+                style={{ backgroundColor: '#4a5568', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.2)' }}
               >
                 Play Again
               </button>
               <button
                 onClick={() => setGameState('menu')}
-                className="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-colors"
+                className="px-5 py-2.5 font-semibold rounded-lg transition-all hover:brightness-110"
+                style={{ backgroundColor: '#333', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.1)' }}
               >
                 Menu
               </button>
               <button
                 onClick={onBack}
-                className="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-colors"
+                className="px-5 py-2.5 font-semibold rounded-lg transition-all hover:brightness-110"
+                style={{ backgroundColor: '#333', color: '#e0e0e0', border: '1px solid rgba(255,255,255,0.1)' }}
               >
                 Regions
               </button>
