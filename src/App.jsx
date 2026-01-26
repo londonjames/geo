@@ -47,7 +47,7 @@ function NavBar() {
 
 function HomePage() {
   return (
-    <div className="min-h-screen w-full" style={{ backgroundColor: '#1c1c1c' }}>
+    <div className="min-h-screen w-full overflow-x-hidden" style={{ backgroundColor: '#1c1c1c' }}>
       <NavBar />
 
       <div className="max-w-6xl mx-auto px-5 md:px-10 py-5">

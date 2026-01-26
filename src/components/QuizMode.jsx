@@ -203,7 +203,7 @@ export default function QuizMode({ regionId, onBack }) {
   // Menu screen
   if (gameState === 'menu') {
     return (
-      <div className="min-h-screen w-full flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
+      <div className="min-h-screen w-full flex flex-col overflow-x-hidden overflow-x-hidden" style={{ backgroundColor: '#1c1c1c' }}>
         <NavBar />
         <div className="flex-1 flex flex-col items-center pt-16 p-4">
           <div className="w-full max-w-md">
@@ -298,7 +298,7 @@ export default function QuizMode({ regionId, onBack }) {
     const isPerfect = score === questions.length;
 
     return (
-      <div className="min-h-screen w-full flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
+      <div className="min-h-screen w-full flex flex-col overflow-x-hidden overflow-x-hidden" style={{ backgroundColor: '#1c1c1c' }}>
         <NavBar />
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="w-full max-w-md text-center">
@@ -373,7 +373,7 @@ export default function QuizMode({ regionId, onBack }) {
 
   // Playing screen - full height map focus
   return (
-    <div className="h-screen w-full flex flex-col" style={{ backgroundColor: '#0d0d0d' }}>
+    <div className="h-screen w-full flex flex-col overflow-x-hidden" style={{ backgroundColor: '#0d0d0d' }}>
       {/* Nav bar - sticky */}
       <header
         className="shrink-0 sticky top-0 z-30"
