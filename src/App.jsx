@@ -32,7 +32,7 @@ function NavBar() {
       className="sticky top-0 z-50"
       style={{ backgroundColor: '#1c1c1c', borderBottom: '1px solid #333' }}
     >
-      <div className="max-w-6xl mx-auto px-5 md:px-10 py-4 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-5 md:px-10 py-4">
         <Link
           to="/"
           className="text-sm font-medium tracking-widest uppercase hover:opacity-60 transition-opacity"
@@ -40,15 +40,6 @@ function NavBar() {
         >
           Geography Explorer
         </Link>
-        <nav className="flex items-center gap-6">
-          <Link
-            to="/"
-            className="text-sm hover:opacity-60 transition-opacity"
-            style={{ color: '#e0e0e0' }}
-          >
-            Home
-          </Link>
-        </nav>
       </div>
     </header>
   );
@@ -59,20 +50,15 @@ function HomePage() {
     <div className="min-h-screen" style={{ backgroundColor: '#1c1c1c' }}>
       <NavBar />
 
-      <div className="max-w-6xl mx-auto px-5 md:px-10 py-6">
-        {/* Hero */}
-        <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2" style={{ color: '#ffffff' }}>
-            Master World Geography
-          </h1>
-          <p className="text-base" style={{ color: '#888' }}>
-            Interactive maps to learn countries, states, and capitals
-          </p>
-        </div>
+      <div className="max-w-6xl mx-auto px-5 md:px-10 py-5">
+        {/* Hero - Single line */}
+        <p className="text-lg mb-5" style={{ color: '#888' }}>
+          Interactive maps to master countries, states, and capitals
+        </p>
 
         {/* US States - Featured */}
-        <section className="mb-8">
-          <h2 className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: '#666', letterSpacing: '0.12em' }}>
+        <section className="mb-6">
+          <h2 className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: '#666', letterSpacing: '0.12em' }}>
             United States
           </h2>
 
@@ -83,11 +69,10 @@ function HomePage() {
               style={{ backgroundColor: '#252525' }}
             >
               <div className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%)' }} />
-              <div className="relative p-5 flex items-center justify-between">
+              <div className="relative p-4 flex items-center justify-between">
                 <div>
-                  <div className="text-3xl mb-1">🇺🇸</div>
-                  <h3 className="text-lg font-semibold text-white">Quiz Mode</h3>
-                  <p className="text-sm text-white/70">Test your knowledge of all 50 states</p>
+                  <h3 className="text-lg font-semibold text-white mb-1">Quiz: Find the States</h3>
+                  <p className="text-sm text-white/70">Can you locate all 50 states on the map?</p>
                 </div>
                 <svg className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -101,11 +86,10 @@ function HomePage() {
               style={{ backgroundColor: '#252525' }}
             >
               <div className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)' }} />
-              <div className="relative p-5 flex items-center justify-between">
+              <div className="relative p-4 flex items-center justify-between">
                 <div>
-                  <div className="text-3xl mb-1">🗺️</div>
-                  <h3 className="text-lg font-semibold text-white">Learn Mode</h3>
-                  <p className="text-sm text-white/70">Explore facts about each state</p>
+                  <h3 className="text-lg font-semibold text-white mb-1">Learn: Explore the States</h3>
+                  <p className="text-sm text-white/70">Discover facts, capitals, and fun trivia</p>
                 </div>
                 <svg className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -117,7 +101,7 @@ function HomePage() {
 
         {/* Continents */}
         <section>
-          <h2 className="text-xs font-medium tracking-widest uppercase mb-4" style={{ color: '#666', letterSpacing: '0.12em' }}>
+          <h2 className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: '#666', letterSpacing: '0.12em' }}>
             World Continents
           </h2>
 
@@ -129,7 +113,7 @@ function HomePage() {
         </section>
 
         {/* Footer */}
-        <footer className="mt-10 pt-6" style={{ borderTop: '1px solid #333' }}>
+        <footer className="mt-6 pt-4" style={{ borderTop: '1px solid #333' }}>
           <p className="text-xs" style={{ color: '#555' }}>
             Built with React & D3.js · Data from REST Countries API
           </p>
@@ -145,7 +129,7 @@ function ContinentCard({ continent }) {
   return (
     <div
       className="relative rounded-xl overflow-hidden cursor-pointer group"
-      style={{ backgroundColor: '#252525', minHeight: '160px' }}
+      style={{ backgroundColor: '#252525', minHeight: '150px' }}
       onMouseEnter={() => setShowOptions(true)}
       onMouseLeave={() => setShowOptions(false)}
     >
