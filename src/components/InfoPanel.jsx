@@ -337,14 +337,14 @@ function FactModal({ data, onClose }) {
       >
         {/* Header */}
         <div
-          className="sticky top-0 z-10 px-6 py-4 flex items-center justify-between"
+          className="sticky top-0 z-10 px-5 py-3 flex items-center justify-between"
           style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #2a2a2a' }}
         >
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">{config.emoji}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">{config.emoji}</span>
             <div>
-              <h3 className="text-xl font-bold" style={{ color: '#fff' }}>{config.title}</h3>
-              <p className="text-sm" style={{ color: '#666' }}>{name}</p>
+              <h3 className="text-lg font-bold" style={{ color: '#fff' }}>{config.title}</h3>
+              <p className="text-xs" style={{ color: '#666' }}>{name}</p>
             </div>
           </div>
           <button
@@ -358,39 +358,39 @@ function FactModal({ data, onClose }) {
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-4 space-y-4">
           {/* Main Facts */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             {facts.map((fact, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 p-4 rounded-xl"
+                className="flex items-start gap-2 p-3 rounded-xl"
                 style={{ backgroundColor: config.bg, border: `1px solid ${config.border}` }}
               >
                 <span
-                  className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                  className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
                   style={{ backgroundColor: config.color, color: '#000' }}
                 >
                   {i + 1}
                 </span>
-                <p className="text-sm leading-relaxed" style={{ color: '#ddd' }}>{fact}</p>
+                <p className="text-sm leading-snug" style={{ color: '#ddd' }}>{fact}</p>
               </div>
             ))}
           </div>
 
           {/* Deep Dive Section */}
           <div
-            className="p-4 rounded-xl"
+            className="p-3 rounded-xl"
             style={{ backgroundColor: '#252525', border: '1px solid #333' }}
           >
-            <h4 className="font-semibold mb-2 flex items-center gap-2" style={{ color: '#fff' }}>
+            <h4 className="text-sm font-semibold mb-1 flex items-center gap-2" style={{ color: '#fff' }}>
               <span>💡</span> {deepDive.title}
             </h4>
-            <p className="text-sm leading-relaxed mb-3" style={{ color: '#aaa' }}>
+            <p className="text-sm leading-snug mb-2" style={{ color: '#aaa' }}>
               {deepDive.content}
             </p>
             <div
-              className="p-3 rounded-lg text-sm"
+              className="p-2 rounded-lg text-xs"
               style={{ backgroundColor: '#1a1a1a', color: '#888' }}
             >
               <strong>Think about it:</strong> {deepDive.tip}
@@ -399,31 +399,20 @@ function FactModal({ data, onClose }) {
 
           {/* Related Facts */}
           {relatedFacts.length > 0 && (
-            <div>
-              <h4 className="text-xs uppercase tracking-wide font-medium mb-3" style={{ color: '#666' }}>
-                Also Discover
-              </h4>
-              <div className="grid grid-cols-2 gap-2">
-                {relatedFacts.map(([key, cfg]) => (
-                  <div
-                    key={key}
-                    className="p-3 rounded-xl text-center"
-                    style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
-                  >
-                    <span className="text-2xl block mb-1">{cfg.emoji}</span>
-                    <span className="text-xs font-medium" style={{ color: cfg.color }}>{cfg.title}</span>
-                  </div>
-                ))}
-              </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs" style={{ color: '#666' }}>Also:</span>
+              {relatedFacts.map(([key, cfg]) => (
+                <div
+                  key={key}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg"
+                  style={{ backgroundColor: cfg.bg, border: `1px solid ${cfg.border}` }}
+                >
+                  <span className="text-sm">{cfg.emoji}</span>
+                  <span className="text-xs font-medium" style={{ color: cfg.color }}>{cfg.title}</span>
+                </div>
+              ))}
             </div>
           )}
-
-          {/* Search Prompt */}
-          <div className="text-center pt-2">
-            <p className="text-xs" style={{ color: '#555' }}>
-              Want to learn more? Search "{name} {config.title.toLowerCase()}" online!
-            </p>
-          </div>
         </div>
       </div>
     </div>
