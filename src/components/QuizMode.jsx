@@ -205,11 +205,10 @@ export default function QuizMode({ regionId, onBack }) {
     return (
       <div className="min-h-screen w-full flex flex-col" style={{ backgroundColor: '#1c1c1c' }}>
         <NavBar />
-        <div className="flex-1 flex items-center justify-center p-4">
+        <div className="flex-1 flex flex-col items-center pt-16 p-4">
           <div className="w-full max-w-md">
             {/* Header */}
             <div className="text-center mb-6">
-              <span className="text-4xl mb-2 block">{region.emoji}</span>
               <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>
                 {region.name} Quiz
               </h2>
