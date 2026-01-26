@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
 import QuizMode from './components/QuizMode';
 import LearnMode from './components/LearnMode';
 import { REGIONS } from './data/regions';
@@ -12,155 +13,124 @@ const CONTINENTS = [
   { id: 'oceania', ...REGIONS.oceania, gradient: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', count: '14 countries' },
 ];
 
-const US_STATES = { id: 'us-states', ...REGIONS['us-states'] };
-
 export default function App() {
-  const [view, setView] = useState('home');
-  const [selectedRegion, setSelectedRegion] = useState(null);
-  const [mode, setMode] = useState('quiz');
-
-  const handleSelectRegion = (regionId) => {
-    setSelectedRegion(regionId);
-    setView(mode);
-  };
-
-  const handleBack = () => {
-    setView('home');
-    setSelectedRegion(null);
-  };
-
-  if (view === 'quiz' && selectedRegion) {
-    return <QuizMode regionId={selectedRegion} onBack={handleBack} />;
-  }
-
-  if (view === 'learn' && selectedRegion) {
-    return <LearnMode regionId={selectedRegion} onBack={handleBack} />;
-  }
-
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#0d0d0d' }}>
-      {/* Hero Section */}
-      <div className="relative overflow-hidden" style={{ backgroundColor: '#1a1a1a' }}>
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, #667eea 0%, transparent 70%)' }} />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, #f093fb 0%, transparent 70%)' }} />
-        </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/quiz/:regionId" element={<QuizPage />} />
+        <Route path="/learn/:regionId" element={<LearnPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-12 pb-8">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3" style={{ color: '#ffffff' }}>
-            Geography Explorer
-          </h1>
-          <p className="text-lg mb-8" style={{ color: '#888' }}>
-            Master world geography through interactive maps
-          </p>
-
-          {/* Mode Toggle */}
-          <div className="inline-flex rounded-full p-1" style={{ backgroundColor: '#2a2a2a' }}>
-            <button
-              onClick={() => setMode('quiz')}
-              className="px-5 py-2 rounded-full text-sm font-medium transition-all duration-200"
-              style={{
-                backgroundColor: mode === 'quiz' ? '#fff' : 'transparent',
-                color: mode === 'quiz' ? '#000' : '#888',
-              }}
-            >
-              Quiz Mode
-            </button>
-            <button
-              onClick={() => setMode('learn')}
-              className="px-5 py-2 rounded-full text-sm font-medium transition-all duration-200"
-              style={{
-                backgroundColor: mode === 'learn' ? '#fff' : 'transparent',
-                color: mode === 'learn' ? '#000' : '#888',
-              }}
-            >
-              Learn Mode
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        {/* US States - Featured Section */}
-        <section className="mb-16">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1 h-8 rounded-full" style={{ background: 'linear-gradient(180deg, #3b82f6 0%, #8b5cf6 100%)' }} />
-            <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>United States</h2>
-          </div>
-
-          <div
-            className="relative rounded-2xl overflow-hidden cursor-pointer group"
-            onClick={() => handleSelectRegion('us-states')}
-            style={{ backgroundColor: '#1a1a1a' }}
+function NavBar() {
+  return (
+    <header
+      className="sticky top-0 z-50"
+      style={{ backgroundColor: '#1c1c1c', borderBottom: '1px solid #333' }}
+    >
+      <div className="max-w-6xl mx-auto px-5 md:px-10 py-4 flex items-center justify-between">
+        <Link
+          to="/"
+          className="text-sm font-medium tracking-widest uppercase hover:opacity-60 transition-opacity"
+          style={{ color: '#e0e0e0', letterSpacing: '0.12em' }}
+        >
+          Geography Explorer
+        </Link>
+        <nav className="flex items-center gap-6">
+          <Link
+            to="/"
+            className="text-sm hover:opacity-60 transition-opacity"
+            style={{ color: '#e0e0e0' }}
           >
-            <div className="absolute inset-0 opacity-80" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #db2777 100%)' }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            Home
+          </Link>
+        </nav>
+      </div>
+    </header>
+  );
+}
 
-            {/* Map silhouette visual */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity">
-              <svg viewBox="0 0 960 600" className="w-full h-full" style={{ maxHeight: '300px' }}>
-                <text x="480" y="320" textAnchor="middle" fill="white" fontSize="200" fontWeight="bold" opacity="0.3">USA</text>
-              </svg>
-            </div>
+function HomePage() {
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: '#1c1c1c' }}>
+      <NavBar />
 
-            <div className="relative p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-6" style={{ minHeight: '240px' }}>
-              <div>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-5xl">🇺🇸</span>
-                  <div>
-                    <h3 className="text-3xl font-bold text-white">50 States</h3>
-                    <p className="text-white/70">Learn every U.S. state and capital</p>
-                  </div>
+      <div className="max-w-6xl mx-auto px-5 md:px-10 py-12">
+        {/* Hero */}
+        <div className="mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3" style={{ color: '#ffffff' }}>
+            Master World Geography
+          </h1>
+          <p className="text-lg" style={{ color: '#888' }}>
+            Interactive maps to learn countries, states, and capitals
+          </p>
+        </div>
+
+        {/* US States - Featured */}
+        <section className="mb-16">
+          <h2 className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: '#666', letterSpacing: '0.12em' }}>
+            United States
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <Link
+              to="/quiz/us-states"
+              className="group relative rounded-xl overflow-hidden"
+              style={{ backgroundColor: '#252525' }}
+            >
+              <div className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%)' }} />
+              <div className="relative p-6 flex items-center justify-between">
+                <div>
+                  <div className="text-2xl mb-1">🇺🇸</div>
+                  <h3 className="text-xl font-semibold text-white">Quiz Mode</h3>
+                  <p className="text-sm text-white/70">Test your knowledge of all 50 states</p>
                 </div>
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {['California', 'Texas', 'New York', 'Florida', '+46 more'].map((state) => (
-                    <span
-                      key={state}
-                      className="px-3 py-1 rounded-full text-xs font-medium"
-                      style={{ backgroundColor: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.9)' }}
-                    >
-                      {state}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <button
-                className="flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:scale-105 shrink-0"
-                style={{ backgroundColor: '#fff', color: '#000' }}
-              >
-                {mode === 'quiz' ? 'Start Quiz' : 'Explore States'}
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-              </button>
-            </div>
+              </div>
+            </Link>
+
+            <Link
+              to="/learn/us-states"
+              className="group relative rounded-xl overflow-hidden"
+              style={{ backgroundColor: '#252525' }}
+            >
+              <div className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity" style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)' }} />
+              <div className="relative p-6 flex items-center justify-between">
+                <div>
+                  <div className="text-2xl mb-1">🗺️</div>
+                  <h3 className="text-xl font-semibold text-white">Learn Mode</h3>
+                  <p className="text-sm text-white/70">Explore facts about each state</p>
+                </div>
+                <svg className="w-6 h-6 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+            </Link>
           </div>
         </section>
 
-        {/* Continents Section */}
+        {/* Continents */}
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1 h-8 rounded-full" style={{ background: 'linear-gradient(180deg, #10b981 0%, #06b6d4 100%)' }} />
-            <h2 className="text-2xl font-bold" style={{ color: '#fff' }}>Explore by Continent</h2>
-          </div>
+          <h2 className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: '#666', letterSpacing: '0.12em' }}>
+            World Continents
+          </h2>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {CONTINENTS.map((continent) => (
-              <ContinentCard
-                key={continent.id}
-                continent={continent}
-                mode={mode}
-                onClick={() => handleSelectRegion(continent.id)}
-              />
+              <ContinentCard key={continent.id} continent={continent} />
             ))}
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="mt-20 pt-8 text-center" style={{ borderTop: '1px solid #222' }}>
-          <p className="text-sm" style={{ color: '#555' }}>
-            Built with React & D3.js  •  Data from REST Countries API
+        <footer className="mt-20 pt-8" style={{ borderTop: '1px solid #333' }}>
+          <p className="text-xs" style={{ color: '#555' }}>
+            Built with React & D3.js · Data from REST Countries API
           </p>
         </footer>
       </div>
@@ -168,44 +138,77 @@ export default function App() {
   );
 }
 
-function ContinentCard({ continent, mode, onClick }) {
+function ContinentCard({ continent }) {
+  const [showOptions, setShowOptions] = React.useState(false);
+
   return (
     <div
-      onClick={onClick}
-      className="relative rounded-xl overflow-hidden cursor-pointer group transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
-      style={{ backgroundColor: '#1a1a1a' }}
+      className="relative rounded-xl overflow-hidden cursor-pointer group"
+      style={{ backgroundColor: '#252525' }}
+      onMouseEnter={() => setShowOptions(true)}
+      onMouseLeave={() => setShowOptions(false)}
     >
-      {/* Gradient background */}
       <div
-        className="absolute inset-0 opacity-80 group-hover:opacity-100 transition-opacity"
+        className="absolute inset-0 opacity-70 group-hover:opacity-90 transition-opacity"
         style={{ background: continent.gradient }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
-      {/* Content */}
-      <div className="relative p-6" style={{ minHeight: '180px' }}>
-        <div className="flex items-start justify-between mb-4">
-          <span className="text-4xl">{continent.emoji}</span>
-          <span
-            className="px-2 py-1 rounded-full text-xs font-medium"
-            style={{ backgroundColor: 'rgba(0,0,0,0.3)', color: 'rgba(255,255,255,0.9)' }}
-          >
+      <div className="relative p-5">
+        <div className="flex items-start justify-between mb-3">
+          <span className="text-3xl">{continent.emoji}</span>
+          <span className="text-xs px-2 py-1 rounded-full bg-black/30 text-white/80">
             {continent.count}
           </span>
         </div>
 
-        <h3 className="text-2xl font-bold text-white mb-1">{continent.name}</h3>
-        <p className="text-white/70 text-sm mb-4">
-          {mode === 'quiz' ? 'Test your knowledge' : 'Explore and learn'}
-        </p>
+        <h3 className="text-xl font-semibold text-white mb-4">{continent.name}</h3>
 
-        <div className="flex items-center gap-2 text-white/90 text-sm font-medium group-hover:text-white transition-colors">
-          <span>{mode === 'quiz' ? 'Start Quiz' : 'Start Learning'}</span>
-          <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
+        {/* Options */}
+        <div className={`flex gap-2 transition-all duration-200 ${showOptions ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+          <Link
+            to={`/quiz/${continent.id}`}
+            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors"
+          >
+            Quiz
+          </Link>
+          <Link
+            to={`/learn/${continent.id}`}
+            className="flex-1 py-2 px-3 rounded-lg text-center text-sm font-medium bg-white/20 hover:bg-white/30 text-white transition-colors"
+          >
+            Learn
+          </Link>
         </div>
       </div>
     </div>
   );
+}
+
+function QuizPage() {
+  const { regionId } = useParams();
+  const navigate = useNavigate();
+
+  if (!REGIONS[regionId]) {
+    return <Navigate to="/" />;
+  }
+
+  return <QuizMode regionId={regionId} onBack={() => navigate('/')} />;
+}
+
+function LearnPage() {
+  const { regionId } = useParams();
+  const navigate = useNavigate();
+
+  if (!REGIONS[regionId]) {
+    return <Navigate to="/" />;
+  }
+
+  return <LearnMode regionId={regionId} onBack={() => navigate('/')} />;
+}
+
+function Navigate({ to }) {
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    navigate(to);
+  }, [navigate, to]);
+  return null;
 }
