@@ -16,7 +16,7 @@ const CONTINENTS = [
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/geo">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/quiz/:regionId" element={<QuizPage />} />
