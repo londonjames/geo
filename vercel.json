@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/geo/(.*)", "destination": "/geo/" }
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
